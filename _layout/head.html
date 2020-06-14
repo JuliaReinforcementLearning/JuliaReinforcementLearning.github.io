@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="icon" href="/assets/logoF_square.gif">
+
+  {{if hasmath}} {{insert head_katex.html }}     {{end}}
+  {{if hascode}} {{insert head_highlight.html }}   {{end}}
+
+  <title>{{title}}</title>
+
+  <!-- Bootstrap core CSS -->
+  <link href="/css/bootstrap.min.css" rel="stylesheet">
+  <link href="/css/custom.css" rel="stylesheet">
+
+  <!-- distill -->
+  <script src="/libs/distill/template.v2.8.0.js"></script>
+  {{frontmatter}}
+</head>
+<body>
+  {{insert nav.html}}
+    <d-title><h1>{{title}}</h1>{{adddescription}}</d-title>
+    {{byline}}
+    {{dtoc}}
+<!-- Content appended here -->
