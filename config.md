@@ -1,6 +1,5 @@
 @def author = "Jun & Thibaut"
 @def generate_rss = false
-@def prepath = "DistillTemplate"
 
 @def content_tag = "d-article"
 @def content_class = "franklin-content"
