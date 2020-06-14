@@ -1,0 +1,22 @@
+<!-- CONTENT ENDS HERE -->
+          <!-- <d-bibliography src="bibliography.bib"></d-bibliography> -->
+
+    {{ if hasmath }}
+        {{ insert foot_katex.html }}
+    {{ end }}
+    {{ if hascode }}
+        {{ insert foot_highlight.html }}
+    {{ end }}
+
+    {{ appendix }}
+    <div class="distill-site-nav distill-site-footer">
+      <div class="row">
+        <div class="col-md-3"></div>
+        <div class="col-md-6">
+          <p>This website is built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> with the <a href="https://github.com/tlienart/DistillTemplate">DistillTemplate</a> (licensed under <a href="https://github.com/distillpub/template/blob/master/LICENSE">Apache License 2.0</a>) and <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a>. The <a href="https://github.com/JuliaReinforcementLearning/JuliaReinforcementLearning.github.io">source code</a> of this website is licensed under <a href="https://github.com/JuliaReinforcementLearning/JuliaReinforcementLearning.github.io/blob/master/LICENSE">MIT License</a>. The <a href="https://github.com/JuliaReinforcementLearning">JuliaReinforcementLearning</a> organization was first created by <a href="https://github.com/jbrea">Johanni Brea</a> and then maintained by <a href="https://github.com/findmyway">Jun Tian</a>. And we thank all the contributors <sup>[<a href="https://github.com/JuliaReinforcementLearning/ReinforcementLearning.jl/graphs/contributors">1</a>, <a href="https://github.com/JuliaReinforcementLearning/ReinforcementLearningBase.jl/graphs/contributors">2</a>, <a href="https://github.com/JuliaReinforcementLearning/ReinforcementLearningCore.jl/graphs/contributors">3</a>, <a href="https://github.com/JuliaReinforcementLearning/ReinforcementLearningZoo.jl/graphs/contributors">4</a>, <a href="https://github.com/JuliaReinforcementLearning/ReinforcementLearningEnvironments.jl/graphs/contributors">5</a>, <a href="https://github.com/JuliaReinforcementLearning/ArcadeLearningEnvironment.jl/graphs/contributors">6</a>]</sup> in this organization.</p>
+        </div>
+        <div class="col-md-3"></div>
+      </div>
+    </div>
+  </body>
+</html>
