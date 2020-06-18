@@ -70,7 +70,7 @@ function lx_dcite(lxc,_)
 end
 
 dfigure(layout, src, caption) = """
-    <figure class="l-$layout">
+    <figure class="l-$layout text-center">
         <img src="$src">
         <figcaption>$caption</figcaption>
     </figure>
