@@ -80,4 +80,22 @@ Now that you already know how to run the experiment of [BasicDQN](https://juliar
 
 ## Basic Components
 
-[WIP]
+Every experiment at least contains the following two components: **agent** and **env**.
+
+\dfig{body;./agent_env_relation.png;The relation between **agent** and **env**. The agent takes in an observation from environment and feed an action back to the environment. This process repeats until a stop condition meets. During this time, the agent needs to improve its policy in order to maximise the expected total reward.}
+
+First
+
+```julia:./test1
+a = 1
+@show a
+```
+
+\output{./test1}
+
+```julia:./test2
+b = a + 1
+@show b
+```
+
+\output{./test2}

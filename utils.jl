@@ -69,12 +69,15 @@ function lx_dcite(lxc,_)
     "<d-cite key=\"$content\"></d-cite>" |> html
 end
 
-dfigure(layout, src, caption) = """
+function dfigure(layout, src, caption)
+    @info "test" layout src caption
+    """
     <figure class="l-$layout text-center">
         <img src="$src">
         <figcaption>$caption</figcaption>
     </figure>
     """ |> html
+end
 
 # https://github.com/distillpub/template/blob/b854bd0124911e1be4744e472b67832e3251b96c/src/styles/styles-layout.css#L137-L166
 """
