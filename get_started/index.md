@@ -46,9 +46,9 @@ So what's happening here?
 
 1. In the first line, typing `]` will bring you to the *Pkg* mode. `add ReinforcementLearning` will install the latest version of `ReinforcementLearning.jl` for you. And then remember to press backspace or ^C to get back to the normal mode.
 1. `using ReinforcementLearning` will bring the names exported in `ReinforcementLearning` into global scope. If this is your first time to run, you'll see *precompiling ReinforcementLearning*. And it may take a while.
-1. The third line means, `run` an **E**xperiment named `JuliaRL_BasicDQN_CartPole`.
+1. The third line means, `run` an **E**xperiment named `JuliaRL_BasicDQN_CartPole` \footnote{The ``E`JuliaRL_BasicDQN_CartPole` `` is a handy [command literal](https://docs.julialang.org/en/v1/manual/metaprogramming/index.html#Non-Standard-String-Literals-1) to instantiate a prebuilt experiment.}.
 
-CartPole is considered to be one of the simplest environments for **DRL(Deep Reinforcement Learning)** algorithms testing. The state of the CartPole environment can be described with 4 numbers and the actions are two integers(`1` and `2`). Before game terminates, agent can gain a reward of `+1` for each step. And the game will be forced to end after 200 steps, thus the maximum reward of an episode is **200**. 
+CartPole is considered to be one of the simplest environments for DRL (Deep Reinforcement Learning) algorithms testing. The state of the CartPole environment can be described with 4 numbers and the actions are two integers(`1` and `2`). Before game terminates, agent can gain a reward of `+1` for each step. And the game will be forced to end after 200 steps, thus the maximum reward of an episode is `200`. 
 
 While the experiment is running, you'll see the following information and a progress bar. The information may be slightly different based on your platform and your current working directory. Note that the first run would be slow. On a mordern computer, the experiment should be finished in a minute.
 
