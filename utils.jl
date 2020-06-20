@@ -55,7 +55,17 @@ function hfun_appendix()
     ap = locvar(:appendix)
     ap = isnothing(ap) ? "" : F.md2html(ap)
     bib = locvar(:bibliography)
-    bib = isnothing(bib) ? "" : "<d-bibliography src=\"$(F.parse_rpath(bib; canonical=false, code=true))\"></d-bibliography>"
+    if isnothing(bib)
+        bib = ""
+    else
+        bib_in_cur_folder = joinpath(splitdir(locvar("fd_rpath"))[1], bib)
+        if isfile(bib_in_cur_folder)
+            bib_resolved = F.parse_rpath("/" * bib_in_cur_folder)
+        else
+            bib_resolved = F.parse_rpath(bib; canonical=false, code=true)
+        end
+        bib = "<d-bibliography src=\"$bib_resolved\"></d-bibliography>"
+    end
     """
     <d-appendix>
         $ap

@@ -15,7 +15,7 @@
             }
         ],
         "publishedDate":"$(now())",
-        "citationText":"Jun Tian, 2020"
+        "citationText":"Jun Tian, $(Dates.format(now(), "Y"))"
     }"""
 
 @def appendix = """
