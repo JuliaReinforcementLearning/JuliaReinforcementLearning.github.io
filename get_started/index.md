@@ -2,6 +2,7 @@
 @def description = "Welcome to the world of reinforcement learning in Julia. Now let's get started in 3 lines!"
 @def is_enable_toc = false
 @def has_code = true
+@def has_math = true
 
 @def front_matter = """
     {
@@ -13,7 +14,7 @@
                 "affiliationURL":""
             }
         ],
-        "publishedDate":"2020-06-18T12:36:15.000+08:00",
+        "publishedDate":"$(now())",
         "citationText":"Jun Tian, 2020"
     }"""
 
