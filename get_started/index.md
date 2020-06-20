@@ -181,4 +181,4 @@ Try to change some other components of `agent.policy.learner` and see how the re
 
 ## What's Next?
 
-Now you are familiar with some basic concepts in ReinforcementLearning.jl, you are encouraged to read the [Guide](/guide) section to have a better understanding of how each components are composed together. In the [Blog](/blog) section, we'll share some details of how algorithms in this package are implemented.
+Now you are familiar with some basic concepts in ReinforcementLearning.jl, you are encouraged to read the [guide](/guide) section to have a better understanding of how each components are composed together. In the [blog](/blog) section, we'll share some details of how algorithms in this package are implemented.
