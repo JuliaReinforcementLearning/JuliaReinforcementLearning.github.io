@@ -63,7 +63,7 @@ println(e.description)
 
 Follow the instruction above and run `tensorboard --logdir /the/path/shown/above`, then a link will be prompted (typically it's `http://YourHost:6006/`). Now open it in your browser, you'll see a webpage similar to the following one:
 
-\dfig{page;./tensorboard_demo.png;Here two important variables are logged: training **loss** per update and total **reward** of each episode during training. As you can see, our agent can reach the maximum reward after training for about 4k steps.}
+\dfig{page;tensorboard_demo.png;Here two important variables are logged: training **loss** per update and total **reward** of each episode during training. As you can see, our agent can reach the maximum reward after training for about 4k steps.}
 
 ## Exercise
 
@@ -82,7 +82,7 @@ Now that you already know how to run the experiment of [BasicDQN](https://juliar
 
 Each experiment at least contains the following two components: **agent** and **env**.
 
-\dfig{body;./agent_env_relation.png;The relation between **agent** and **env**. The agent takes in an observation from environment and feed an action back to the environment. This process repeats until a stop condition meets. During this time, the agent needs to improve its policy in order to maximize the expected total reward.}
+\dfig{body;agent_env_relation.png;The relation between **agent** and **env**. The agent takes in an observation from environment and feed an action back to the environment. This process repeats until a stop condition meets. During this time, the agent needs to improve its policy in order to maximize the expected total reward.}
 
 To control the experiment and record some data, another two important components are also included: `stop_condition` and `hook`. When executing ``run(E`JuliaRL_BasicDQN_CartPole`)``, it will be dispatched to `run(agent, env, stop_condition, hook)`. So it's just the same as running the following lines:
 
