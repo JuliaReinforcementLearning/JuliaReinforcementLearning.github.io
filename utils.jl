@@ -70,7 +70,6 @@ function lx_dcite(lxc,_)
 end
 
 function dfigure(layout, src, caption)
-    @info "test" layout src caption
     """
     <figure class="l-$layout text-center">
         <img src="$src">
@@ -93,6 +92,7 @@ function lx_dfig(lxc,lxd)
     startswith(src, "http") && return dfigure(layout, src, caption)
     src = F.parse_rpath(src; canonical=false, code=true)
 
+    @debug "TEST" src
     # !!! directly take from `lx_fig` in Franklin.jl
     fdir, fext = splitext(src)
 
@@ -116,9 +116,10 @@ function lx_dfig(lxc,lxd)
     # now try in the output dir just in case (provided we weren't already
     # looking there)
     p1, p2 = splitdir(fdir)
+    @debug "TEST" p1 p2
     if splitdir(p1)[2] != "output"
         for ext ∈ candext
-            candpath = joinpath(p1, "output", p2 * ext)
+            candpath = joinpath(splitdir(p1)[1], "output", p2 * ext)
             if F.FD_ENV[:STRUCTURE] < v"0.2"
                 syspath  = joinpath(F.PATHS[:folder], split(candpath, '/')...)
             else

@@ -24,22 +24,22 @@
 
 ## Prepare
 
-First things first, [download](https://julialang.org/downloads/) and install the latest stable Julia version. ReinforcementLearning.jl is tested on all platforms, so just choose the one you are familiar with. If you already have Julia installed, please make sure that it is `v1.3` or above.
+First things first, [download](https://julialang.org/downloads/) and install Julia of the latest stable version. ReinforcementLearning.jl is tested on all platforms, so just choose the one you are familiar with. If you already have Julia installed, please make sure that it is `v1.3` or above.
 
 \aside{ReinforcementLearning.jl relies on some features introduced since `v1.3`, like [MultiThreading](https://docs.julialang.org/en/v1/base/multi-threading/index.html), and [Artifacts](https://julialang.github.io/Pkg.jl/dev/artifacts/)}
 
-Another useful tool is [tensorboard](https://github.com/tensorflow/tensorboard) \footnote{You don't need to install the whole TensorFlow to use the TensorBoard. Behind the scene, ReinforcementLearning.jl uses [TensorBoardLogger.jl](https://github.com/PhilipVinc/TensorBoardLogger.jl) to write data into the format that TensorBoard recoganizes.}. You can install it via `pip install tensorboard` with the python package installer [`pip`](https://pip.pypa.io/en/stable/installing/).
+Another useful tool is [tensorboard](https://github.com/tensorflow/tensorboard) \footnote{You don't need to install the whole TensorFlow to use the TensorBoard. Behind the scene, ReinforcementLearning.jl uses [TensorBoardLogger.jl](https://github.com/PhilipVinc/TensorBoardLogger.jl) to write data into the format that TensorBoard recognizes.}. You can install it via `pip install tensorboard` with the python package installer [`pip`](https://pip.pypa.io/en/stable/installing/).
 
 ## Get Started
 
 Run `julia` in the command line (or double-click the Julia executable) and now you are in an interactive session (also known as a read-eval-print loop or "REPL"). Then execute the following code:
 
 ```julia
-julia> ] add ReinforcementLearning
+] add ReinforcementLearning
 
-julia> using ReinforcementLearning
+using ReinforcementLearning
 
-julia> run(E`JuliaRL_BasicDQN_CartPole`);
+run(E`JuliaRL_BasicDQN_CartPole`);
 ```
 
 So what's happening here?
@@ -50,7 +50,7 @@ So what's happening here?
 
 CartPole is considered to be one of the simplest environments for DRL (Deep Reinforcement Learning) algorithms testing. The state of the CartPole environment can be described with 4 numbers and the actions are two integers(`1` and `2`). Before game terminates, agent can gain a reward of `+1` for each step. And the game will be forced to end after 200 steps, thus the maximum reward of an episode is `200`. 
 
-While the experiment is running, you'll see the following information and a progress bar. The information may be slightly different based on your platform and your current working directory. Note that the first run would be slow. On a mordern computer, the experiment should be finished in a minute.
+While the experiment is running, you'll see the following information and a progress bar. The information may be slightly different based on your platform and your current working directory. Note that the first run would be slow. On a modern computer, the experiment should be finished in a minute.
 
 ```julia:./run_JuliaRL_BasicDQN_CartPole
 #hideall
@@ -61,9 +61,9 @@ println(e.description)
 
 \output{./run_JuliaRL_BasicDQN_CartPole}
 
-Follow the instruction above and run `tensorboard --logdir /the/path/shown/above` and a link will be prompted (typically it's `http://YourHost:6006/`). Now open it in your browser, you'll see a webpage like the following one:
+Follow the instruction above and run `tensorboard --logdir /the/path/shown/above`, then a link will be prompted (typically it's `http://YourHost:6006/`). Now open it in your browser, you'll see a webpage similar to the following one:
 
-\dfig{page;./tensorboard_demo.png;Here two important varialbes are logged: training **loss** per update and total **reward** of each episode during training. As you can see, our agent can reach the maximum reward after training for about 4k steps.}
+\dfig{page;./tensorboard_demo.png;Here two important variables are logged: training **loss** per update and total **reward** of each episode during training. As you can see, our agent can reach the maximum reward after training for about 4k steps.}
 
 ## Exercise
 
@@ -80,22 +80,105 @@ Now that you already know how to run the experiment of [BasicDQN](https://juliar
 
 ## Basic Components
 
-Every experiment at least contains the following two components: **agent** and **env**.
+Each experiment at least contains the following two components: **agent** and **env**.
 
-\dfig{body;./agent_env_relation.png;The relation between **agent** and **env**. The agent takes in an observation from environment and feed an action back to the environment. This process repeats until a stop condition meets. During this time, the agent needs to improve its policy in order to maximise the expected total reward.}
+\dfig{body;./agent_env_relation.png;The relation between **agent** and **env**. The agent takes in an observation from environment and feed an action back to the environment. This process repeats until a stop condition meets. During this time, the agent needs to improve its policy in order to maximize the expected total reward.}
 
-First
+To control the experiment and record some data, another two important components are also included: `stop_condition` and `hook`. When executing ``run(E`JuliaRL_BasicDQN_CartPole`)``, it will be dispatched to `run(agent, env, stop_condition, hook)`. So it's just the same as running the following lines:
 
-```julia:./test1
-a = 1
-@show a
+\aside{[Multiple Dispatch](https://docs.julialang.org/en/v1/manual/methods/) is fully utilized in this package. And it's the secret of high extensibility.}
+
+```julia
+experiment     = E`JuliaRL_BasicDQN_CartPole`
+agent          = experiment.agent
+env            = experiment.env
+stop_condition = experiment.stop_condition
+hook           = experiment.hook
+
+run(agent, env, stop_condition, hook)
 ```
 
-\output{./test1}
+### Stop Condition
 
-```julia:./test2
-b = a + 1
-@show b
+A stop condition is used to determine when to stop an experiment. Two typical ones are [`StopAfterStep`](https://juliareinforcementlearning.org/ReinforcementLearning.jl/latest/rl_core/#ReinforcementLearningCore.StopAfterStep) and [`StopAfterEpisode`](https://juliareinforcementlearning.org/ReinforcementLearning.jl/latest/rl_core/#ReinforcementLearningCore.StopAfterEpisode). As you may have guessed, the above experiment uses `StopAfterStep(10_000)` as the stop condition. Try to change the stop condition and see if it works as expected.
+
+```julia
+experiment = E`JuliaRL_BasicDQN_CartPole`
+run(experiment.agent, experiment.env, StopAfterEpisode(100), experiment.hook)
 ```
 
-\output{./test2}
+Check out the full list of available stop conditions [here](https://juliareinforcementlearning.org/ReinforcementLearning.jl/latest/rl_core/#Stop-Conditions-1). You can also learn [how to write a customized stop condition](https://juliareinforcementlearning.org/guide/#how_to_write_a_customized_stop_condition).
+
+### Hook
+
+A hook is usually used to collect experiment data or modify agent/env while running. You can check the list of provided hooks [here](https://juliareinforcementlearning.org/ReinforcementLearning.jl/latest/rl_core/#Hooks-1). Two common hooks are [`TotalRewardPerEpisode`](https://juliareinforcementlearning.org/ReinforcementLearning.jl/latest/rl_core/#ReinforcementLearningCore.TotalRewardPerEpisode) and [`StepsPerEpisode`](https://juliareinforcementlearning.org/ReinforcementLearning.jl/latest/rl_core/#ReinforcementLearningCore.StepsPerEpisode).
+
+```julia:./ex1
+using ReinforcementLearning # hide
+using Plots
+
+experiment = E`JuliaRL_BasicDQN_CartPole`
+hook = TotalRewardPerEpisode()
+run(experiment.agent, experiment.env, experiment.stop_condition, hook)
+plot(hook.rewards)
+savefig(joinpath(@OUTPUT, "episode.svg")) # hide
+```
+
+\aside{Remember to install Plots by `] add Plots` first.}
+
+\dfig{body;episode.svg;Total reward of each episode during training.}
+
+Still wondering how is the tensorboard logging generated? Learn [how to use tensorboard](https://juliareinforcementlearning.org/guide/#how_to_use_tensorboard) and [how to write a customized hook](https://juliareinforcementlearning.org/guide/#how_to_write_a_customized_hook).
+
+### Environment
+
+In the above experiment, a [`CartPoleEnv`](https://juliareinforcementlearning.org/ReinforcementLearning.jl/latest/rl_envs/#ReinforcementLearningEnvironments.CartPoleEnv) is created. Here we'll also use it to demonstrate some common methods that an environment should implement:
+
+```julia
+env = CartPoleEnv()
+
+reset!(env)         # reset env to the initial state
+
+obs = observe(env)  # get an observation from the env
+get_state(obs)      # get the state from observation, usually it's a tensor
+get_reward(obs)     # get the reward since last interaction with environment
+get_terminal(obs)   # check if the game is terminated or not
+
+action_space = get_action_space(env)
+env(rand(action_space))  # feed a random action to the environment
+```
+
+You may also read the detailed description for [how to write a customized environment](http://juliareinforcementlearning.org/guide/#how_to_write_a_customized_environment).
+
+### Agent
+
+In a nutshell, agent is a functional object which takes in an observation and returns an action.
+
+```julia
+agent = experiment.agent
+obs = observe(env)
+action = agent(obs)
+```
+
+In the above experiment, we created an agent of type [`Agent`](https://juliareinforcementlearning.org/ReinforcementLearning.jl/latest/rl_core/#ReinforcementLearningCore.Agent), which is the most common and the default agent in this package. Inside of the agent, a [`BasicDQNLearner`](https://juliareinforcementlearning.org/ReinforcementLearning.jl/latest/rl_zoo/#ReinforcementLearningZoo.BasicDQNLearner) is used to estimate the state-action value. Here we can modify it in-place to change some parameters.
+
+```julia:./ex2
+using ReinforcementLearning # hide
+using Plots # hide
+
+experiment = E`JuliaRL_BasicDQN_CartPole`
+experiment.agent.policy.learner.γ = 0.98
+hook = TotalRewardPerEpisode()
+
+run(experiment.agent, experiment.env, experiment.stop_condition, hook)
+plot(hook.rewards)
+savefig(joinpath(@OUTPUT, "reward_gamma.svg"))  # hide
+```
+
+\dfig{body;reward_gamma.svg;Total reward of each episode during training with $\gamma = 0.98$.}
+
+Try to change some other components of `agent.policy.learner` and see how the rewards are affected.
+
+## What's Next?
+
+Now you are familiar with some basic concepts in ReinforcementLearning.jl, you are encouraged to read the [Guide](/guide) section to have a better understanding of how each components are composed together. In the [Blog](/blog) section, we'll share some details of how algorithms in this package are implemented.
