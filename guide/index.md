@@ -170,3 +170,23 @@ DoEveryNStep() do t, agent, env, obs
     end
 end,
 ```
+
+## How to evaluate an agent during training?
+
+Well, just like the matryoshka doll, we run an experiment inside an experiment with a hook!
+
+```julia
+run(
+    agent,
+    env,
+    stop_condition
+    DoEveryNStep(EVALUATION_FREQ) do t, agent, env, obs
+        Flux.testmode!(agent)
+        run(agent, env, eval_stop_condition, eval_hook)
+        Flux.trainmode!(agent)
+    end
+    )
+```
+
+\dfig{body;dolls.gif;From https://cdn.dribbble.com/users/882503/screenshots/3744602/dolls.gif}
+
