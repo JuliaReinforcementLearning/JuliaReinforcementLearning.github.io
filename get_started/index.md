@@ -78,6 +78,14 @@ Now that you already know how to run the experiment of [BasicDQN](https://juliar
 - `JuliaRL_A2CGAE_CartPole`
 - `JuliaRL_PPO_CartPole`
 - `JuliaRL_DDPG_Pendulum`
+- `Dopamine_DQN_Atari(pong)`
+- `Dopamine_Rainbow_Atari(pong)`
+- `Dopamine_IQN_Atari(pong)`
+- `JuliaRL_A2C_Atari(pong)`
+- `JuliaRL_A2CGAE_Atari(pong)`
+- `JuliaRL_PPO_Atari(pong)`
+
+\aside{To run experiments with Atari, you have to install it first with `]add ArcadeLearningEnvironment` and then `using ArcadeLearningEnvironment`.}
 
 ## Basic Components
 
