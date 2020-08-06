@@ -80,9 +80,13 @@ empty!(t)
 
 The following code constructs an agent to use the [`BasicDQNLearner`](https://juliareinforcementlearning.org/ReinforcementLearning.jl/latest/rl_zoo/#ReinforcementLearningZoo.BasicDQNLearner). It is the same with the one used in the `JuliaRL_BasicDQN_CartPole` experiment.
 
-```julia
-env = CartPoleEnv(; T = Float32, seed = 11)
-ns, na = length(get_state(env)), length(get_action_space(env))
+```julia:./create_agent
+using ReinforcementLearning
+using Random
+using Flux
+rng = MersenneTwister(123)
+env = CartPoleEnv(;T = Float32, rng = rng)
+ns, na = length(get_state(env)), length(get_actions(env))
 agent = Agent(
     policy = QBasedPolicy(
         learner = BasicDQNLearner(
@@ -97,13 +101,13 @@ agent = Agent(
             batch_size = 32,
             min_replay_history = 100,
             loss_func = huber_loss,
-            seed = 22,
+            rng = rng,
         ),
         explorer = EpsilonGreedyExplorer(
             kind = :exp,
             ϵ_stable = 0.01,
             decay_steps = 500,
-            seed = 33,
+            rng = rng,
         ),
     ),
     trajectory = CircularCompactSARTSATrajectory(
@@ -112,26 +116,18 @@ agent = Agent(
         state_size = (ns,),
     ),
 )
+println(agent) # hide
 ```
 
 \aside{You might have noticed that [Flux.jl](https://github.com/FluxML/Flux.jl) is used here to build the deep learning model. With the abstraction layer of `Approximator`, we can replace Flux.jl with Knet.jl or even PyTorch or TensorFlow.}
 
-In the construction part of `BasicDQNLearner`, a [`NeuralNetworkApproximator`](https://juliareinforcementlearning.org/ReinforcementLearning.jl/latest/rl_core/#ReinforcementLearningCore.NeuralNetworkApproximator) is used to estimate the Q value. The core algorithm part is implemented in the learner. The `BasicDQNLearner` accepts an environment and returns state-action values.
+In the construction part of `BasicDQNLearner`, a [`NeuralNetworkApproximator`](https://juliareinforcementlearning.org/ReinforcementLearning.jl/latest/rl_core/#ReinforcementLearningCore.NeuralNetworkApproximator) is used to estimate the Q value. The core algorithm part is implemented in the learner. The `BasicDQNLearner` accepts an environment and returns state-action values. The resulted agent is shown below:
+
+\output{./create_agent}
 
 ## How to write a customized environment?
 
-In short, implement the following methods for single-agent synchronous environments:
-
-```julia
-get_actions(env::YourEnv)   # -> AbstractSpace
-get_state(env::YourEnv)     # -> AbstractArray
-get_reward(env::YourEnv)    # -> Number
-get_terminal(env::YourEnv)  # -> Bool
-reset!(env::YourEnv)        # -> nothing
-(env::YourEnv)(action)      # -> nothing
-```
-
-For more complicated environments, you may refer those implemented in [ReinforcementLearningEnvironments.jl](https://github.com/JuliaReinforcementLearning/ReinforcementLearningEnvironments.jl).
+See the detailed [blog](/blog/how_to_write_a_customized_environment/).
 
 ## How to write a customized stop condition?
 
