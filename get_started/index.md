@@ -39,6 +39,7 @@ Run `julia` in the command line (or double-click the Julia executable) and now y
 ] add ReinforcementLearning
 
 using ReinforcementLearning
+using Flux, Random, BSON
 
 run(E`JuliaRL_BasicDQN_CartPole`)
 ```
@@ -55,7 +56,7 @@ While the experiment is running, you'll see the following information and a prog
 
 ```julia:./display_JuliaRL_BasicDQN_CartPole_1
 #hideall
-using ReinforcementLearning
+using ReinforcementLearning, Flux, Random, BSON
 e = E`JuliaRL_BasicDQN_CartPole`
 print(e.description)
 ```
