@@ -99,7 +99,7 @@ hook = TotalRewardPerEpisode()
 run(
     Agent(
         ;policy = RandomPolicy(env),
-        trajectory = VectorialCompactSARTSATrajectory(
+        trajectory = VectCompactSARTSATrajectory(
             state_type=Bool,
             action_type=Any,
             reward_type=Int,

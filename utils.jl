@@ -126,11 +126,7 @@ function lx_dfig(lxc,lxd)
                      (".png", ".jpeg", ".jpg", ".svg", ".gif"), (fext,))
     for ext ∈ candext
         candpath = fdir * ext
-        if F.FD_ENV[:STRUCTURE] < v"0.2"
-            syspath  = joinpath(F.PATHS[:folder], split(candpath, '/')...)
-        else
-            syspath  = joinpath(F.PATHS[:site], split(candpath, '/')...)
-        end
+        syspath  = joinpath(F.PATHS[:site], split(candpath, '/')...)
         isfile(syspath) && return dfigure(layout, candpath, caption)
     end
     # now try in the output dir just in case (provided we weren't already
@@ -140,11 +136,7 @@ function lx_dfig(lxc,lxd)
     if splitdir(p1)[2] != "output"
         for ext ∈ candext
             candpath = joinpath(splitdir(p1)[1], "output", p2 * ext)
-            if F.FD_ENV[:STRUCTURE] < v"0.2"
-                syspath  = joinpath(F.PATHS[:folder], split(candpath, '/')...)
-            else
-                syspath  = joinpath(F.PATHS[:site], split(candpath, '/')...)
-            end
+            syspath  = joinpath(F.PATHS[:site], split(candpath, '/')...)
             isfile(syspath) && return dfigure(layout, candpath, caption)
         end
     end
