@@ -25,7 +25,7 @@ jobs:
       continue-on-error: true
       uses: webfactory/ssh-agent@v0.2.0
       with:
-        ssh-private-key: ${{ secrets.FRANKLIN_PRIV }}
+        ssh-private-key: ${{ secrets.GITHUB_TOKEN }}
     # NOTE
     #   Python is necessary for pre-rendering steps as well as to install
     #   matplotlib which is necessary if you intend to use PyPlot. If you do
