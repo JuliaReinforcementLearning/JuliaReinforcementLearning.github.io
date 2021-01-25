@@ -86,7 +86,7 @@ using Random
 using Flux
 rng = MersenneTwister(123)
 env = CartPoleEnv(;T = Float32, rng = rng)
-ns, na = length(state(env)), length(action_space(env))
+ns, na = length(get_state(env)), length(get_actions(env))
 agent = Agent(
     policy = QBasedPolicy(
         learner = BasicDQNLearner(
