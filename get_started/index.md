@@ -166,10 +166,10 @@ Some commonly used methods are:
 
 ```julia
 reset!(env)                  # reset env to the initial state
-get_state(env)               # get the state from environment, usually it's a tensor
-get_reward(env)              # get the reward since last interaction with environment
-get_terminal(env)            # check if the game is terminated or not
-env(rand(get_actions(env)))  # feed a random action to the environment
+state(env)               # get the state from environment, usually it's a tensor
+reward(env)              # get the reward since last interaction with environment
+is_terminated(env)            # check if the game is terminated or not
+env(rand(action_space(env)))  # feed a random action to the environment
 ```
 
 You may also read the detailed description for [how to write a customized environment](http://juliareinforcementlearning.org/guide/#how_to_write_a_customized_environment).

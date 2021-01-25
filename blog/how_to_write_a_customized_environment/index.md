@@ -23,10 +23,10 @@ The most commonly used interfaces to describe reinforcement learning tasks is [O
 Many interfaces in [ReinforcementLearningBase.jl][] have a default implementation. So in most cases, you only need to implement the following functions to define a customized environment:
 
 ```julia
-get_actions(env::YourEnv)
-get_state(env::YourEnv)
-get_reward(env::YourEnv)
-get_terminal(env::YourEnv)
+action_space(env::YourEnv)
+state(env::YourEnv)
+reward(env::YourEnv)
+is_terminated(env::YourEnv)
 reset!(env::YourEnv)
 (env::YourEnv)(action)
 ```
@@ -54,15 +54,15 @@ LotteryEnv() = LotteryEnv(nothing)
 `LotteryEnv` has only one field named `reward`, by default it is initialized with `nothing`. Now let's implement the necessary interfaces:
 
 ```julia:./lottery_env
-RLBase.get_actions(env::LotteryEnv) = (:PowerRich, :MegaHaul, nothing)
+RLBase.action_space(env::LotteryEnv) = (:PowerRich, :MegaHaul, nothing)
 ```
 
 Here `RLBase` is just an alias for `ReinforcementLearningBase`.
 
 ```julia:./lottery_env
-RLBase.get_reward(env::LotteryEnv) = env.reward
-RLBase.get_state(env::LotteryEnv) = !isnothing(env.reward)
-RLBase.get_terminal(env::LotteryEnv) = !isnothing(env.reward)
+RLBase.reward(env::LotteryEnv) = env.reward
+RLBase.state(env::LotteryEnv) = !isnothing(env.reward)
+RLBase.is_terminated(env::LotteryEnv) = !isnothing(env.reward)
 RLBase.reset!(env::LotteryEnv) = env.reward = nothing
 ```
 
@@ -148,8 +148,8 @@ print(@doc ActionStyle)
 
 For environments of `FULL_ACTION_SET`, the following methods must be implemented:
 
-- `get_legal_actions(env)`
-- `get_legal_actions_mask(env)`
+- `legal_action_space(env)`
+- `legal_action_space_mask(env)`
 
 ### DynamicStyle
 
@@ -219,7 +219,7 @@ print(@doc NumAgentStyle)
 
 \textoutput{./doc_of_NumAgentStyle}
 
-The `NumAgentStyle` trait is used to define the number of agents in an environment. Possible values are `SINGLE_AGENT` or `MultiAgent{N}()`. In multi-agent environments, a special case is `Two_Agent`, which is an alias of `MultiAgent{2}()`. For multi-agent environments, many functions need to accept another argument named `player` (for example `get_reward(env,player)`) to support getting information from the perspective of a specific player. Here's the list of these functions:
+The `NumAgentStyle` trait is used to define the number of agents in an environment. Possible values are `SINGLE_AGENT` or `MultiAgent{N}()`. In multi-agent environments, a special case is `Two_Agent`, which is an alias of `MultiAgent{2}()`. For multi-agent environments, many functions need to accept another argument named `player` (for example `reward(env,player)`) to support getting information from the perspective of a specific player. Here's the list of these functions:
 
 ```julia:./list_of_multi_agent_methods
 # hideall
@@ -236,8 +236,8 @@ Some useful environment wrappers are also provided in [ReinforcementLearningBase
 
 ```julia
 inner_env = LotteryEnv()
-env = inner_env |> ActionTransformedEnv(a -> get_actions(inner_env)[a])
-RLBase.get_actions(env::ActionTransformedEnv{<:LotteryEnv}) = 1:3
+env = inner_env |> ActionTransformedEnv(a -> action_space(inner_env)[a])
+RLBase.action_space(env::ActionTransformedEnv{<:LotteryEnv}) = 1:3
 ```
 
 In some other cases, we may want to transform the state into integers. Similarly we can achieve this goal with the following code:
