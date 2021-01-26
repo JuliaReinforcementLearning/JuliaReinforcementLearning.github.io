@@ -14,26 +14,44 @@
                 "affiliationURL":""
             }
         ],
-        "publishedDate":"$(now())",
-        "citationText":"Jun Tian, $(Dates.format(now(), "Y"))"
+        "publishedDate":"2021-01-26",
+        "citationText":"Jun Tian, 2021"
     }"""
 
 @def appendix = """
     ### Corrections
-    If you see mistakes or want to suggest changes, please [create an issue](https://github.com/JuliaReinforcementLearning/JuliaReinforcementLearning.github.io/issues) on the source repository.
+    If you see mistakes or want to suggest changes, please [create an issue](https://github.com/JuliaReinforcementLearning/ReinforcementLearning.jl/issues) in the source repository.
     """
+
+@def bibliography = "bibliography.bib"
+
+@def RL_VERSION = [v.version for (k,v) in Pkg.dependencies() if v.name=="ReinforcementLearning"][1]
 
 ## Prepare
 
-First things first, [download](https://julialang.org/downloads/) and install Julia of the latest stable version. ReinforcementLearning.jl is tested on all platforms, so just choose the one you are familiar with. If you already have Julia installed, please make sure that it is `v1.3` or above.
+First things first, [download](https://julialang.org/downloads/) and install
+Julia of the latest stable version. ReinforcementLearning.jl is tested on all
+platforms, so just choose the one you are familiar with. If you already have
+Julia installed, please make sure that it is `$(VERSION)` or above.
 
-\aside{ReinforcementLearning.jl relies on some features introduced since `v1.3`, like [MultiThreading](https://docs.julialang.org/en/v1/base/multi-threading/index.html), and [Artifacts](https://julialang.github.io/Pkg.jl/dev/artifacts/)}
+\aside{ReinforcementLearning.jl relies on some features introduced since `v1.3`,
+like
+[MultiThreading](https://docs.julialang.org/en/v1/base/multi-threading/index.html),
+and [Artifacts](https://julialang.github.io/Pkg.jl/dev/artifacts/)}
 
-Another useful tool is [tensorboard](https://github.com/tensorflow/tensorboard) \footnote{You don't need to install the whole TensorFlow to use the TensorBoard. Behind the scene, ReinforcementLearning.jl uses [TensorBoardLogger.jl](https://github.com/PhilipVinc/TensorBoardLogger.jl) to write data into the format that TensorBoard recognizes.}. You can install it via `pip install tensorboard` with the python package installer [`pip`](https://pip.pypa.io/en/stable/installing/).
+Another useful tool is [tensorboard](https://github.com/tensorflow/tensorboard)
+\footnote{You don't need to install the whole TensorFlow to use the TensorBoard.
+Behind the scene, ReinforcementLearning.jl uses
+[TensorBoardLogger.jl](https://github.com/PhilipVinc/TensorBoardLogger.jl) to
+write data into the format that TensorBoard recognizes.}. You can install it via
+`pip install tensorboard` with the python package installer
+[`pip`](https://pip.pypa.io/en/stable/installing/).
 
 ## Get Started
 
-Run `julia` in the command line (or double-click the Julia executable) and now you are in an interactive session (also known as a read-eval-print loop or "REPL"). Then execute the following code:
+Run `julia` in the command line (or double-click the Julia executable) and now
+you are in an interactive session (also known as a read-eval-print loop or
+"REPL"). Then execute the following code: 
 
 ```julia
 ] add ReinforcementLearning
@@ -45,13 +63,34 @@ run(E`JuliaRL_BasicDQN_CartPole`)
 
 So what's happening here?
 
-1. In the first line, typing `]` will bring you to the *Pkg* mode. `add ReinforcementLearning` will install the latest version of `ReinforcementLearning.jl` for you. And then remember to press backspace or ^C to get back to the normal mode.
-1. `using ReinforcementLearning` will bring the names exported in `ReinforcementLearning` into global scope. If this is your first time to run, you'll see *precompiling ReinforcementLearning*. And it may take a while.
-1. The third line means, `run` an **E**xperiment named `JuliaRL_BasicDQN_CartPole` \footnote{The ``E`JuliaRL_BasicDQN_CartPole` `` is a handy [command literal](https://docs.julialang.org/en/v1/manual/metaprogramming/index.html#Non-Standard-String-Literals-1) to instantiate a prebuilt experiment.}.
+1. In the first line, typing `]` will bring you to the *Pkg* mode. `add
+   ReinforcementLearning` will install the latest version of
+   `ReinforcementLearning.jl` for you. And then remember to press backspace or
+   ^C to get back to the normal mode. Note that sometimes you may have an old
+   version installed. The reason is that some of the packages you have installed
+   in your current Julia environment have an outdated dependency, resulting in a
+   downgraded install of `ReinforcementLearning.jl`. You can confirm it by
+   installing the latest master branch with `] add ReinforcementLearning#master`.
+   To solve this problem, you can create a temporary directory and then activate
+   the Julia environment there with `] activate /path/to/tmp/dir`.
 
-CartPole is considered to be one of the simplest environments for DRL (Deep Reinforcement Learning) algorithms testing. The state of the CartPole environment can be described with 4 numbers and the actions are two integers(`1` and `2`). Before game terminates, agent can gain a reward of `+1` for each step. And the game will be forced to end after 200 steps, thus the maximum reward of an episode is `200`. 
+1. `using ReinforcementLearning` will bring the names exported in
+   `ReinforcementLearning` into global scope. If this is your first time to run,
+   you'll see *precompiling ReinforcementLearning*. And it may take a while.
 
-While the experiment is running, you'll see the following information and a progress bar. The information may be slightly different based on your platform and your current working directory. Note that the first run would be slow. On a modern computer, the experiment should be finished in a minute.
+1. The third line means, `run` a predefined **E**xperiment named `JuliaRL_BasicDQN_CartPole` \footnote{The ``E`JuliaRL_BasicDQN_CartPole` `` is a handy [command literal](https://docs.julialang.org/en/v1/manual/metaprogramming/index.html#Non-Standard-String-Literals-1) to instantiate a prebuilt experiment.}.
+
+CartPole is considered to be one of the simplest environments for DRL (Deep
+Reinforcement Learning) algorithms testing. The state of the CartPole
+environment can be described with 4 numbers and the actions are two integers(`1`
+and `2`). Before game terminates, agent can gain a reward of `+1` for each step.
+By default, the game will be forced to terminate after 200 steps, thus the
+maximum reward of an episode is `200`. 
+
+While the experiment is running, you'll see the following information and a
+progress bar. The information may be slightly different based on your platform
+and your current working directory. Note that the first run would be slow. On a
+modern computer, the experiment should be finished in a minute.
 
 ```julia:./display_JuliaRL_BasicDQN_CartPole_1
 #hideall
@@ -73,7 +112,13 @@ Follow the instruction above and run `tensorboard --logdir /the/path/shown/above
 
 ## Exercise
 
-Now that you already know how to run the experiment of [BasicDQN](https://juliareinforcementlearning.org/ReinforcementLearning.jl/latest/rl_zoo/#ReinforcementLearningZoo.BasicDQNLearner) algorithm with the CartPole environment. You are suggested to try some other experiments below to compare the performance of different algorithms \footnote{For the full list of supported algorithms, please visit [ReinforcementLearningZoo.jl](https://github.com/JuliaReinforcementLearning/ReinforcementLearningZoo.jl#list-of-built-in-experiments)}:
+Now that you already know how to run the experiment of
+[BasicDQN](https://juliareinforcementlearning.org/ReinforcementLearning.jl/latest/rl_zoo/#ReinforcementLearningZoo.BasicDQNLearner)
+algorithm with the CartPole environment. You are suggested to try some other
+experiments below to compare the performance of different algorithms
+\footnote{For the full list of supported algorithms, please visit
+[ReinforcementLearningZoo.jl](https://github.com/JuliaReinforcementLearning/ReinforcementLearningZoo.jl#list-of-built-in-experiments)}:
+
 
 \aside{Note that the parameters in the experiments listed here are tuned.}
 
@@ -117,66 +162,40 @@ run(agent, env, stop_condition, hook)
 
 Now let's explain these components one by one.
 
-### Agent
+### Stop Condition
 
-In a nutshell, agent is a functional object which takes in an environment and returns an action. That's all.
+A stop condition is used to determine when to stop an experiment. Two typical ones are [`StopAfterStep`](https://juliareinforcementlearning.org/ReinforcementLearning.jl/latest/rl_core/#ReinforcementLearningCore.StopAfterStep) and [`StopAfterEpisode`](https://juliareinforcementlearning.org/ReinforcementLearning.jl/latest/rl_core/#ReinforcementLearningCore.StopAfterEpisode). As you may have seen, the above experiment uses `StopAfterStep(10_000)` as the stop condition. Try to change the stop condition and see if it works as expected.
 
 ```julia
-agent = experiment.agent
-env = experiment.environment
-action = agent(env)
-```
-
-In the above experiment, we created an agent of type [`Agent`](https://juliareinforcementlearning.org/ReinforcementLearning.jl/latest/rl_core/#ReinforcementLearningCore.Agent), which is the most common and the default agent in this package. Inside of the agent, a [`BasicDQNLearner`](https://juliareinforcementlearning.org/ReinforcementLearning.jl/latest/rl_zoo/#ReinforcementLearningZoo.BasicDQNLearner) is used to estimate the state-action value. Here we can modify it in-place to change some parameters.
-
-\aside{Remember to install Plots by `] add Plots` first.}
-
-```julia:./ex2
-using ReinforcementLearning # hide
-using Plots
-
 experiment = E`JuliaRL_BasicDQN_CartPole`
-experiment.agent.policy.learner.γ = 0.98
-hook = TotalRewardPerEpisode()
-
-run(experiment.agent, experiment.env, experiment.stop_condition, hook)
-plot(hook.rewards)
-savefig(joinpath(@OUTPUT, "reward_gamma.svg"))  # hide
+run(experiment.agent, experiment.env, StopAfterEpisode(100), experiment.hook)
 ```
 
-\dfig{body;reward_gamma.svg;Total reward of each episode during training with $\gamma = 0.98$.}
-
-Try to change some other parameters in `agent.policy.learner` and see how the rewards are affected.
-
-### Environment
-
-In this package, many different kinds of environments are supported. Here we use the [CartPoleEnv](https://juliareinforcementlearning.org/ReinforcementLearning.jl/latest/rl_envs/#ReinforcementLearningEnvironments.CartPoleEnv-Tuple{}) to demonstrate some common methods that an environment should implement:
-
-```julia:./env_cart_pole
-using ReinforcementLearning # hide
-env = CartPoleEnv()
-show(stdout, MIME"text/plain"(), env)  # hide
-```
-
-You can see the summary of the `CartPoleEnv` as below:
-
-\output{./env_cart_pole}
-
-Some commonly used methods are:
-
-```julia
-reset!(env)                  # reset env to the initial state
-get_state(env)               # get the state from environment, usually it's a tensor
-get_reward(env)              # get the reward since last interaction with environment
-get_terminal(env)            # check if the game is terminated or not
-env(rand(get_actions(env)))  # feed a random action to the environment
-```
-
-You may also read the detailed description for [how to write a customized environment](http://juliareinforcementlearning.org/guide/#how_to_write_a_customized_environment).
+At some point, you may need to learn [how write a customized stop condition](/guide/#how_to_write_a_customized_hook).
 
 ### Hook
 
-A hook is usually used to collect experiment data or modify agent/env while running. You can check the list of provided hooks [here](https://juliareinforcementlearning.org/ReinforcementLearning.jl/latest/rl_core/#Hooks-1). Two common hooks are [`TotalRewardPerEpisode`](https://juliareinforcementlearning.org/ReinforcementLearning.jl/latest/rl_core/#ReinforcementLearningCore.TotalRewardPerEpisode) and [`StepsPerEpisode`](https://juliareinforcementlearning.org/ReinforcementLearning.jl/latest/rl_core/#ReinforcementLearningCore.StepsPerEpisode).
+The concept of hook in `ReinforcementLearning.jl` is mainly inspired by the
+**two-way** callbacks in FastAI \dcite{howard2020fastai}:
+
+> A callback should be available at every single point that code can be run
+> during training, so that a user can customise every single detail of the
+> training method;
+
+> Every callback should be able to access every piece of information available
+> at that stage in the training loop, including hyper-parameters, losses,
+> gradients, input and target data, and so forth;
+
+In fact, we extend the first kind of callback further in
+`ReinforcementLearning.jl`. Thanks to multiple-dispatch in Julia, we can easily
+customize the behavior of every detail in training, testing, evaluating stages.
+
+You can check the list of provided hooks
+[here](https://juliareinforcementlearning.org/ReinforcementLearning.jl/latest/rl_core/#Hooks-1).
+Two common hooks are
+[`TotalRewardPerEpisode`](https://juliareinforcementlearning.org/ReinforcementLearning.jl/latest/rl_core/#ReinforcementLearningCore.TotalRewardPerEpisode)
+and
+[`StepsPerEpisode`](https://juliareinforcementlearning.org/ReinforcementLearning.jl/latest/rl_core/#ReinforcementLearningCore.StepsPerEpisode).
 
 ```julia:./ex1
 using ReinforcementLearning # hide
@@ -191,20 +210,93 @@ savefig(joinpath(@OUTPUT, "episode.svg")) # hide
 
 \dfig{body;episode.svg;Total reward of each episode during training.}
 
-Still wondering how is the tensorboard logging generated? Learn [how to use tensorboard](https://juliareinforcementlearning.org/guide/#how_to_use_tensorboard) and [how to write a customized hook](https://juliareinforcementlearning.org/guide/#how_to_write_a_customized_hook).
+Still wondering how the tensorboard logging data is generated? Learn [how to use tensorboard](https://juliareinforcementlearning.org/guide/#how_to_use_tensorboard) and [how to write a customized hook](https://juliareinforcementlearning.org/guide/#how_to_write_a_customized_hook).
 
+### Agent
 
-### Stop Condition
-
-A stop condition is used to determine when to stop an experiment. Two typical ones are [`StopAfterStep`](https://juliareinforcementlearning.org/ReinforcementLearning.jl/latest/rl_core/#ReinforcementLearningCore.StopAfterStep) and [`StopAfterEpisode`](https://juliareinforcementlearning.org/ReinforcementLearning.jl/latest/rl_core/#ReinforcementLearningCore.StopAfterEpisode). As you may have seen, the above experiment uses `StopAfterStep(10_000)` as the stop condition. Try to change the stop condition and see if it works as expected.
+An agent is an instance of `AbstractPolicy`. It is a functional object which
+takes in an environment and returns an action.
 
 ```julia
-experiment = E`JuliaRL_BasicDQN_CartPole`
-run(experiment.agent, experiment.env, StopAfterEpisode(100), experiment.hook)
+action = agent(env)
 ```
 
-Check out the full list of available stop conditions [here](https://juliareinforcementlearning.org/ReinforcementLearning.jl/latest/rl_core/#Stop-Conditions-1). You can also learn [how to write a customized stop condition](https://juliareinforcementlearning.org/guide/#how_to_write_a_customized_stop_condition).
+In the above experiment, the `agent` is of type
+[`Agent`](https://juliareinforcementlearning.org/ReinforcementLearning.jl/latest/rl_core/#ReinforcementLearningCore.Agent),
+which is one of the most common policies in this package. We'll study how to
+create, modify and update an agent in detail later. Suppose now we want to apply
+another policy to the cart pole environment, a simple random policy. We can
+simply replace the first argument with `RandomPolicy([1, 2])`. Here `[1,2]` are
+valid actions to the `CartPoleEnv`.
+
+\aside{Remember to install Plots with `] add Plots` first.}
+
+```julia
+using ReinforcementLearning
+
+experiment = E`JuliaRL_BasicDQN_CartPole`
+
+run(RandomPolicy([1,2]), experiment.env, experiment.stop_condition, experiment.hook)
+
+println(experiment.description)
+```
+
+Just like what you did above, you can now watch the result based on the
+description of the experiment.
+
+### Environment
+
+We've been using the `CartPoleEnv` for all the experiments above. But what does
+it look like? By printing it in the REPL, we can see a lot of information about
+it. Each of them are clearly described in [interface.jl](https://github.com/JuliaReinforcementLearning/ReinforcementLearningBase.jl/blob/master/src/interface.jl).
+
+```julia:./env_cart_pole
+using ReinforcementLearning # hide
+env = CartPoleEnv()
+show(stdout, MIME"text/plain"(), env)  # hide
+```
+
+\output{./env_cart_pole}
+
+Some people coming from the Python world may be familiar with the APIs defined
+in **OpenAI/Gym**. Ours are very similar to them for simple environments:
+
+```julia
+reset!(env)              # reset env to the initial state
+state(env)               # get the state from environment, usually it's a tensor
+reward(env)              # get the reward since last interaction with environment
+is_terminated(env)       # check if the game is terminated or not
+actions(env)             # valid actions
+env(rand(actions(env)))  # update the environment's internal state given an action
+```
+
+However, our package has a more ambitious goal to support much more complicated
+environments. You may take a look at
+[ReinforcementLearningEnvironments.jl](https://github.com/JuliaReinforcementLearning/ReinforcementLearningEnvironments.jl)
+to see some more built in examples. For users who are interested in applying
+algorithms in this package to their own problems, you may also read the detailed description for [how to write a customized environment](http://juliareinforcementlearning.org/guide/#how_to_write_a_customized_environment).
 
 ## What's Next?
 
-Now you are familiar with some basic concepts in ReinforcementLearning.jl, you are encouraged to read the [guide](/guide) section to have a better understanding of how each component is implemented and composed. In the [blog](/blog) section, we'll share some details of how algorithms in this package are implemented.
+We have introduced the four main concepts in the `ReinforcementLearning.jl`
+package. I hope you have a better understanding of them now.
+- For starters who would like to learn reinforcement learning, I'd suggest you
+  start from
+  [ReinforcementLearningAnIntroduction.jl](https://github.com/JuliaReinforcementLearning/ReinforcementLearningAnIntroduction.jl).
+  If you are already familiar with traditional tabular reinforcement learning
+  algorithms, then go ahead to
+  [ReinforcementLearningZoo.jl](https://github.com/JuliaReinforcementLearning/ReinforcementLearningZoo.jl)
+  to explore those DRL related
+  [experiments](https://github.com/JuliaReinforcementLearning/ReinforcementLearningZoo.jl/tree/master/src/experiments).
+  Try to modify the parameters and compare the different results.
+- For general users who want to use existing algorithms in our package to their
+  customized environments, first learn skim through games defined in
+  [ReinforcementLearningEnvironments.jl](https://github.com/JuliaReinforcementLearning/ReinforcementLearningEnvironments.jl)
+  to learn how to describe the problem you are going to deal with. Then choose
+  the appropriate policy in
+  [ReinforcementLearningZoo.jl](https://github.com/JuliaReinforcementLearning/ReinforcementLearningZoo.jl)
+  and tune the hyparameters. The [Guild](/guide) page may help you understand
+  how each component is connected with others.
+- For algorithm designers who want to contribute new algorithms, you're
+  suggested to read the [blog](/blog) to understand the design principles and
+  best practices.
