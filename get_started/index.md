@@ -25,14 +25,15 @@
 
 @def bibliography = "bibliography.bib"
 
-@def RL_VERSION = [v.version for (k,v) in Pkg.dependencies() if v.name=="ReinforcementLearning"][1]
+@def RL_VERSION = string([v.version for (k,v) in Pkg.dependencies() if v.name=="ReinforcementLearning"][1])
+@def JULIA_VERSION = string(VERSION)
 
 ## Prepare
 
 First things first, [download](https://julialang.org/downloads/) and install
 Julia of the latest stable version. ReinforcementLearning.jl is tested on all
 platforms, so just choose the one you are familiar with. If you already have
-Julia installed, please make sure that it is `$(VERSION)` or above.
+Julia installed, please make sure that it is {{ fill JULIA_VERSION }} or above.
 
 \aside{ReinforcementLearning.jl relies on some features introduced since `v1.3`,
 like
@@ -66,13 +67,15 @@ So what's happening here?
 1. In the first line, typing `]` will bring you to the *Pkg* mode. `add
    ReinforcementLearning` will install the latest version of
    `ReinforcementLearning.jl` for you. And then remember to press backspace or
-   ^C to get back to the normal mode. Note that sometimes you may have an old
-   version installed. The reason is that some of the packages you have installed
-   in your current Julia environment have an outdated dependency, resulting in a
-   downgraded install of `ReinforcementLearning.jl`. You can confirm it by
-   installing the latest master branch with `] add ReinforcementLearning#master`.
-   To solve this problem, you can create a temporary directory and then activate
-   the Julia environment there with `] activate /path/to/tmp/dir`.
+   ^C to get back to the normal mode. All examples in this website are built with
+   `ReinforcementLearning` of version {{ fill RL_VERSION}} . Note that sometimes
+   you may have an old version installed. The reason is that some of the
+   packages you have installed in your current Julia environment have an
+   outdated dependency, resulting in a downgraded install of
+   `ReinforcementLearning.jl`. You can confirm it by installing the latest
+   master branch with `] add ReinforcementLearning#master`. To solve this
+   problem, you can create a temporary directory and then activate the Julia
+   environment there with `] activate /path/to/tmp/dir`.
 
 1. `using ReinforcementLearning` will bring the names exported in
    `ReinforcementLearning` into global scope. If this is your first time to run,
