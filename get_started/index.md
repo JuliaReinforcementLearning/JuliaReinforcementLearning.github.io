@@ -155,7 +155,7 @@ When executing ``run(E`JuliaRL_BasicDQN_CartPole`)``, it will be dispatched to `
 
 ```julia
 experiment     = E`JuliaRL_BasicDQN_CartPole`
-agent          = experiment.agent
+agent          = experiment.policy
 env            = experiment.env
 stop_condition = experiment.stop_condition
 hook           = experiment.hook
@@ -171,7 +171,7 @@ A stop condition is used to determine when to stop an experiment. Two typical on
 
 ```julia
 experiment = E`JuliaRL_BasicDQN_CartPole`
-run(experiment.agent, experiment.env, StopAfterEpisode(100), experiment.hook)
+run(experiment.policy, experiment.env, StopAfterEpisode(100), experiment.hook)
 ```
 
 At some point, you may need to learn [how write a customized stop condition](/guide/#how_to_write_a_customized_hook).
@@ -206,7 +206,7 @@ using Plots # hide
 
 experiment = E`JuliaRL_BasicDQN_CartPole`
 hook = TotalRewardPerEpisode()
-run(experiment.agent, experiment.env, experiment.stop_condition, hook)
+run(experiment.policy, experiment.env, experiment.stop_condition, hook)
 plot(hook.rewards)
 savefig(joinpath(@OUTPUT, "episode.svg")) # hide
 ```
