@@ -26,7 +26,7 @@ The most commonly used interfaces to describe reinforcement learning tasks is [O
 
 ## The Minimal Interfaces to Implement
 
-Many interfaces in [ReinforcementLearningBase.jl][] have a default implementation. So in most cases, you only need to implement the following functions to define a customized environment:
+Many interfaces in [ReinforcementLearningBase.jl](https://github.com/JuliaReinforcementLearning/ReinforcementLearningBase.jl) have a default implementation. So in most cases, you only need to implement the following functions to define a customized environment:
 
 ```julia
 action_space(env::YourEnv)
