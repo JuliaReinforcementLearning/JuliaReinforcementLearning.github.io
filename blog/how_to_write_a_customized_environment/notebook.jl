@@ -4,6 +4,12 @@
 using Markdown
 using InteractiveUtils
 
+# ╔═╡ dccad7c8-62fb-11eb-226f-393c73301bcb
+begin
+	using Dates
+	using Pkg
+end
+
 # ╔═╡ 5938a9a6-6099-11eb-1ac9-1fb12d9c9237
 using ReinforcementLearning
 
@@ -16,10 +22,20 @@ using Plots
 # ╔═╡ ac7e107c-609b-11eb-2d50-4b50517e1840
 using Flux:InvDecay
 
-# ╔═╡ 03852aa2-6099-11eb-39db-ffba5eeade98
+# ╔═╡ bed48ef6-62fb-11eb-327a-ed29787dda3c
 md"""
 # How to Write a Customized Environment in ReinforcementLearning.jl?
+"""
 
+# ╔═╡ e262295a-62fb-11eb-32c0-051c8995d14a
+md"""
+- Last Update: $(now())
+- Julia Version: $VERSION
+- ReinforcementLearning.jl Version: $([v.version for (k,v) in Pkg.dependencies() if v.name=="ReinforcementLearning"][1])
+"""
+
+# ╔═╡ 03852aa2-6099-11eb-39db-ffba5eeade98
+md"""
 The first step to apply algorithms in ReinforcementLearning.jl is to define the problem you want to solve in a recognizable way. Here we'll demonstrate how to write many different kinds of environments based on interfaces defined in `ReinforcementLearningBase.jl`
 
 The most commonly used interfaces to describe reinforcement learning tasks is [OpenAI/Gym](https://gym.openai.com/). Inspired by it, we expand those interfaces a little to utilize the multiple-dispatch in Julia and to cover multi-agent environments.
@@ -465,6 +481,9 @@ Finally we've gone through all the details you need to know for how to write a c
 """
 
 # ╔═╡ Cell order:
+# ╟─bed48ef6-62fb-11eb-327a-ed29787dda3c
+# ╟─dccad7c8-62fb-11eb-226f-393c73301bcb
+# ╟─e262295a-62fb-11eb-32c0-051c8995d14a
 # ╟─03852aa2-6099-11eb-39db-ffba5eeade98
 # ╠═5938a9a6-6099-11eb-1ac9-1fb12d9c9237
 # ╠═d4d6a2e0-6099-11eb-10ad-dd67c607ea0a
