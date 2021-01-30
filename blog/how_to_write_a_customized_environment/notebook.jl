@@ -245,7 +245,7 @@ end
 
 # ╔═╡ 59f80b90-609c-11eb-30ef-776f1154d897
 md"""
-If you are careful enough, you'll find that our policy is not updatin at all!!!
+If you are observant enough, you'll find that our policy is not updating at all!!!
 """
 
 # ╔═╡ ab96c892-609c-11eb-08b4-e3f1d1d70049
@@ -253,7 +253,7 @@ p.learner.approximator.table
 
 # ╔═╡ b63d5192-609c-11eb-1bdc-21dd1f56cf22
 md"""
-Well, acturally the policy is running in the **evaluation** mode here. We'll explain it in another blog. For now, you only need to know that we can wrap the policy in an `Agent` to train the policy.
+Well, actually the policy is running in the **evaluation** mode here. We'll explain it in another blog. For now, you only need to know that we can wrap the policy in an `Agent` to train the policy.
 """
 
 # ╔═╡ c4e97848-609d-11eb-0e9d-dda4843007bd
