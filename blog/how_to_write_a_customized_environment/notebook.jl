@@ -245,7 +245,7 @@ end
 
 # ╔═╡ 59f80b90-609c-11eb-30ef-776f1154d897
 md"""
-If you are observant enough, you'll find that our policy is not updatin at all!!!
+If you are observant enough, you'll find that our policy is not updating at all!!!
 """
 
 # ╔═╡ ab96c892-609c-11eb-08b4-e3f1d1d70049
