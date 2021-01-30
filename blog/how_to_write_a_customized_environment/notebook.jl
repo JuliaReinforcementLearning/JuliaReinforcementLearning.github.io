@@ -299,7 +299,7 @@ Note that every state style may have different representations, `String`, `Array
 """
 
 # ╔═╡ 12fa94ec-60b0-11eb-0bd7-a5da4368db56
-RLBase.state(::Observation{String}, ::LotteryEnv) = is_terminated(env) ? "Game Over" : "Game Start"
+RLBase.state(::Observation{String}, env::LotteryEnv) = is_terminated(env) ? "Game Over" : "Game Start"
 
 # ╔═╡ 43d13376-60b0-11eb-3f05-8f50e494764b
 md"""
