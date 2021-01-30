@@ -426,7 +426,7 @@ If all players can see the same state, then we say the `InformationStyle` of the
 md"""
 #### `DynamicStyle`
 
-All the environments we've seen so far are of `Sequential` style, meaning that at each step, only **ONE** player is allowed to take an action. Agains these are `Simultaneous` environments, all players take actions simultaneously and they can't see each other's action in advance. For simultaneous environments, they should only take a collection of actions from different players as input.
+All the environments we've seen so far were of `Sequential` style, meaning that at each step, only **ONE** player was allowed to take an action. Alternatively there are `Simultaneous` environments, where all the players take actions simultaneously without seeing each other's action in advance. Simultaneous environments must take a collection of actions from different players as input.
 """
 
 # ╔═╡ 6a58f464-60bb-11eb-12ab-592202a61d9f
