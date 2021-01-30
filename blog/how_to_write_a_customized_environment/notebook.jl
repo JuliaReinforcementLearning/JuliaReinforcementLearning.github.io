@@ -224,7 +224,7 @@ wrapped_env = ActionTransformedEnv(
         env,
         s -> s ? 1 : 2
     ),
-    action_space_mapping = x -> Base.OneTo(3),
+    action_space_mapping = _ -> Base.OneTo(3),
     action_mapping = i -> action_space(env)[i]
 )
 
