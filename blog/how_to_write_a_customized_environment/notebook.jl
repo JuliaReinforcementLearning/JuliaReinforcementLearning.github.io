@@ -461,7 +461,7 @@ chance_player(kp) in players(kp)
 md"""
 ## Examples
 
-Finally we've gone through all the details you need to know for how to write a customized environment. You're suggested to take a look at the examples provided in [ReinforcementLearningEnvironments.jl](https://github.com/JuliaReinforcementLearning/ReinforcementLearningEnvironments.jl). Feel free to create an issue there if you're still not sure how to describe your problem with the interfaces defined in this package.
+Finally we've gone through all the details you need to know for how to write a customized environment. You're encouraged to take a look at the examples provided in [ReinforcementLearningEnvironments.jl](https://github.com/JuliaReinforcementLearning/ReinforcementLearningEnvironments.jl). Feel free to create an issue there if you're still not sure how to describe your problem with the interfaces defined in this package.
 """
 
 # ╔═╡ Cell order:
