@@ -49,6 +49,25 @@ end
 
 See the detailed [blog](/blog/how_to_write_a_customized_environment/).
 
+## How to write a environment wrapper?
+
+Sometimes, you may want to write a new environment starting from existing
+environments. To write a such environment wrapper, you only need to define your
+structure as a subtype of `AbstractEnvWrapper` and store the original
+environment in the `env` field. Then by default all environment related APIs
+defined in `RLBase` will be forwarded into the inner `env`. You only need to
+implement the interfaces as needed.
+
+The following example defines a wrapper to clip the reward:
+
+```julia
+struct ClipRewardWrapper{T} <: AbstractEnvWrapper
+    env::T
+end
+
+RLBase.reward(env::ClipRewardWrapper) = clamp(reward(env.env), -0.1, 0.1)
+```
+
 ## How to write a customized stop condition?
 
 Stop condition is just a function which is executed after interacting environment and returns a bool value indicating whether to stop an experiment or not.
