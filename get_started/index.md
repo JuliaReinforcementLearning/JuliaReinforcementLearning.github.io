@@ -298,7 +298,7 @@ package. I hope you have a better understanding of them now.
   to learn how to describe the problem you are going to deal with. Then choose
   the appropriate policy in
   [ReinforcementLearningZoo.jl](https://github.com/JuliaReinforcementLearning/ReinforcementLearningZoo.jl)
-  and tune the hyparameters. The [Guild](/guide) page may help you understand
+  and tune the hyparameters. The [Guide](/guide) page may help you understand
   how each component is connected with others.
 - For algorithm designers who want to contribute new algorithms, you're
   suggested to read the [blog](/blog) to understand the design principles and
