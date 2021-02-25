@@ -1,13 +1,15 @@
-@def title = "List of Blogs"
-@def description = "Test"
-@def is_enable_toc = true
+@def title = "Blogs"
+@def description = ""
+@def is_enable_toc = false
 
-## Blog List
+- [An Introduction to ReinforcementLearning.jl: Design, Implementations and Thoughts](/blog/an_introduction_to_reinforcement_learning_jl_design_implementations_thoughts)
 
 - [How to Write a Customized
   Environment?](/blog/how_to_write_a_customized_environment/)
 
-- Notebooks for the book: [*Reinforcement Learning: an Introduction 2nd Edition*](https://github.com/JuliaReinforcementLearning/ReinforcementLearningAnIntroduction.jl)
+- Notebooks for the book: [*Reinforcement Learning: an Introduction 2nd
+  Edition*](https://github.com/JuliaReinforcementLearning/ReinforcementLearningAnIntroduction.jl)
+
   - [Chapter01 Tic Tac Toe.jl](/blog/notebooks_for_reinforcement_learning_an_introduction/Chapter01_Tic_Tac_Toe.jl)
   - [Chapter02 Ten Armed Testbed.jl](/blog/notebooks_for_reinforcement_learning_an_introduction/Chapter02_Ten_Armed_Testbed.jl)
   - [Chapter03 Grid World.jl](/blog/notebooks_for_reinforcement_learning_an_introduction/Chapter03_Grid_World.jl)
