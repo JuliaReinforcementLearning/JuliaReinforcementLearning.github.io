@@ -1,4 +1,4 @@
-@def title = "An Introduction to ReinforcementLearning.jl: Design, Implementation and Thoughts"
+@def title = "An Introduction to ReinforcementLearning.jl: Design, Implementations and Thoughts"
 @def description = """
     Reinforcement learning has led to many breakthroughs during the last several
     years. A number of packages mainly written in Python exist that provide stable
@@ -81,9 +81,9 @@ A policy simply takes a look at the environment and yields an action. And an env
 
 ```julia
 function Base.run(policy, env)
-		while true
-		    env |> policy |> env
-		end
+    while true
+        env |> policy |> env
+    end
 end
 ```
 
@@ -96,12 +96,12 @@ Then we have the following code:
 
 ```julia
 function Base.run(policy, env)
-		while true
-				reset!(env)
-				while !is_terminated(env)
-				    env |> policy |> env
-		    end
-		end
+    while true
+        reset!(env)
+        while !is_terminated(env)
+            env |> policy |> env
+        end
+    end
 end
 ```
 
@@ -109,13 +109,13 @@ In real world tasks, we never expect the workflow to run infinitely. Usually we 
 
 ```julia
 function Base.run(policy, env, stop_condition)
-		while true
-				reset!(env)
-				while !is_terminated(env)
-				    env |> policy |> env
+    while true
+        reset!(env)
+        while !is_terminated(env)
+            env |> policy |> env
             stop_condition(policy, env) && return
-		    end
-		end
+        end
+    end
 end
 ```
 
@@ -134,18 +134,18 @@ An agent is simply a combination of any policy to be updated and a corresponding
 
 ```julia
 function Base.run(policy, env, stop_condition)
-		while true
-				reset!(env)
+    while true
+        reset!(env)
         policy(PRE_EPISODE_STAGE, env)
-				while !is_terminated(env)
+        while !is_terminated(env)
             action = policy(env)
             policy(PRE_ACT_STAGE, env, action)
-				    env(action)
+            env(action)
             policy(POST_ACT_STAGE, env)
             stop_condition(policy, env) && return
-		    end
+        end
         policy(POST_EPISODE_STAGE, env)
-		end
+    end
 end
 ```
 
@@ -162,22 +162,22 @@ Now the policy can play happily with the environment. We would also want to inje
 ```julia
 function Base.run(policy, env, stop_condition, hook)
     hook(PRE_EXPERIMENT_STAGE, env)
-		while true
-				reset!(env)
+    while true
+        reset!(env)
         policy(PRE_EPISODE_STAGE, env)
         hook(PRE_EPISODE_STAGE, env)
-				while !is_terminated(env)
+        while !is_terminated(env)
             action = policy(env)
             policy(PRE_ACT_STAGE, env, action)
             hook(PRE_ACT_STAGE, env, action)
-				    env(action)
+            env(action)
             policy(POST_ACT_STAGE, env)
             hook(POST_ACT_STAGE, env)
             stop_condition(policy, env) && return
-		    end
+        end
         policy(POST_EPISODE_STAGE, env)
         hook(POST_EPISODE_STAGE, env)
-		end
+    end
 end
 ```
 
