@@ -199,7 +199,7 @@ For environments with a small state space, we can use a table to record the stat
 
 In this section, we'll give a brief introduction to different types of reinforcement learning algorithms implemented in our package. After that we'll relate these algorithms with the underlying components provided in our package. Developers should feel confident to implement new algorithms after reading this section. Note that all the code snippets here are for illustration only, they may differ from the one provided in the package.
 
-Following the standard textbook definitions\dcite{sutton2018reinforcement}, the interactions between an agent and environment can be formalized as a fully-observed or partially-observed Markov decision process ((PO)MDP). Here we focus on the fully-observed MDP. The MDP is defined as a tuple $\mathcal{M} = (\mathcal{S}, \mathcal{A}, \mathcal{T}, d_0, r, \gamma)$ where
+Following the standard textbook definitions\dcite{sutton2018reinforcement}, the interactions between an agent and environment can be formalized as a fully-observable or partially-observable Markov decision process ((PO)MDP). Here we focus on the fully-observable MDP. The MDP is defined as a tuple $\mathcal{M} = (\mathcal{S}, \mathcal{A}, \mathcal{T}, d_0, r, \gamma)$ where
 
 - $\mathcal{S}$ is a set of states $s \in \mathcal{S}$
 - $\mathcal{A}$ is a set of actions
