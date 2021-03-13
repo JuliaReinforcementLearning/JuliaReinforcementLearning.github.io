@@ -218,7 +218,7 @@ $$R_t = \sum_{i \ge 0} \gamma^ir_t = r_t + \gamma R_{t+1}$$
 
 ### 3.1 State Value Function and State-Action Value function
 
-Note that if we can estimate the state value or state-action value accurately, it will be easy to get a near-optimal policy. The state value function $V^\pi(s_t)$ estimates the reward $R_t$ by following the policy $\pi$ starting from state $s_t$:
+Note that if we can estimate the state value or state-action value accurately, it will be easy to get a near-optimal policy. The state value function $V^\pi(s_t)$ estimates the return $R_t$ by following the policy $\pi$ starting from state $s_t$:
 
 $$V^\pi(s_t) = \mathbb{E}_{\Tau \sim p_\pi(\Tau | s_t)} R_t$$
 
