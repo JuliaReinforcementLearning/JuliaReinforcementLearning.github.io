@@ -185,7 +185,7 @@ Except for some corner cases, the code above is very close to [our implementatio
 
 ### 2.2 Trajectory
 
-We use the `AbstreactTrajectory` to describe the container used to collect intermediate data during the interactions between policy and environment. Among all the different implementations, the simplest one is `Trajectory`. Essentially, it's just a wrapper of a `NamedTuple` with some customized behaviors to avoid *type piracy*.
+We use the `AbstractTrajectory` to describe the container used to collect intermediate data during the interactions between policy and environment. Among all the different implementations, the simplest one is `Trajectory`. Essentially, it's just a wrapper of a `NamedTuple` with some customized behaviors to avoid *type piracy*.
 
 \dfig{page;Presentation1.gif; The default implementation of `VectorSARTTrajectory`.}
 
