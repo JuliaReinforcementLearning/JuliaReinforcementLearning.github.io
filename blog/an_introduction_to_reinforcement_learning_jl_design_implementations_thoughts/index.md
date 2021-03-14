@@ -153,7 +153,7 @@ Note that by default, `(policy::AbstractPolicy)(::AbstractStage, env)` will do n
 
 - `update!(policy, trajectory, env, stage)` (Read as `update!` the inner `policy` given a `trajectory`, `env` and the current `stage`)
 - `update!(trajectory, policy, env, stage)` (Read as `update!` the inner `trajectory` given a `policy`, `env` and the current `stage`)
-- `update!(trajectory, policy, env, ::PreActStage, action)` (The `PreActStage` is a little special, an extra `action` is already provided to avoid calculating it again.)
+- `update!(trajectory, policy, env, ::PreActStage, action)` (The `action` here is the one selected by the policy to be executed on the `env`)
 
 By default, `update!(policy, trajectory, env, stage)` will do nothing. The default implementation of `update!(trajectory, policy, env, stage)` is explained in the **2.2 Trajectory** section. But developers can customize these behaviors easily thanks to multiple dispatch.
 
