@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>JuliaRL_IQN_CartPole · ReinforcementLearning.jl</title><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-149861753-1', 'auto');
+ga('send', 'pageview', {'page': location.pathname + location.search + location.hash});
+</script><link href="https://fonts.googleapis.com/css?family=Lato|Roboto+Mono" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.0/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.0/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.0/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL="../../../.."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="../../../../assets/documenter.js"></script><script src="../../../../siteinfo.js"></script><script src="../../../../../versions.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../../../assets/themes/documenter-dark.css" data-theme-name="documenter-dark" data-theme-primary-dark/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../../../assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="../../../../assets/themeswap.js"></script><link href="../../../../assets/favicon.ico" rel="icon" type="image/x-icon"/><link href="../../../../assets/custom.css" rel="stylesheet" type="text/css"/><link href="../../../../democards/gridtheme.css" rel="stylesheet" type="text/css"/></head><body><div id="documenter"><nav class="docs-sidebar"><a class="docs-logo" href="../../../../"><img src="../../../../assets/logo.svg" alt="ReinforcementLearning.jl logo"/></a><div class="docs-package-name"><span class="docs-autofit">ReinforcementLearning.jl</span></div><form class="docs-search" action="../../../../search/"><input class="docs-search-query" id="documenter-search-query" name="q" type="text" placeholder="Search docs"/></form><ul class="docs-menu"><li><a class="tocitem" href="../../../../">Home</a></li><li><a class="tocitem" href="../../../../tutorial/">Tutorial</a></li><li><span class="tocitem">Guides</span><ul><li><a class="tocitem" href="../../../../How_to_write_a_customized_environment/">How to write a customized environment?</a></li><li><a class="tocitem" href="../../../../How_to_implement_a_new_algorithm/">How to implement a new algorithm?</a></li><li><a class="tocitem" href="../../../../How_to_use_hooks/">How to use hooks?</a></li><li><a class="tocitem" href="../../../../Which_algorithm_should_I_use/">Which algorithm should I use?</a></li></ul></li><li><a class="tocitem" href="../../../../FAQ/">FAQ</a></li><li><a class="tocitem" href="../../../">Experiments</a></li><li><a class="tocitem" href="../../../../tips/">Tips for Developers</a></li><li><span class="tocitem">Manual</span><ul><li><a class="tocitem" href="../../../../rlbase/">RLBase</a></li><li><a class="tocitem" href="../../../../rlcore/">RLCore</a></li><li><a class="tocitem" href="../../../../rlenvs/">RLEnvs</a></li><li><a class="tocitem" href="../../../../rlzoo/">RLZoo</a></li></ul></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><nav class="breadcrumb"><ul class="is-hidden-mobile"><li class="is-active"><a href>JuliaRL_IQN_CartPole</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href>JuliaRL_IQN_CartPole</a></li></ul></nav><div class="docs-right"><a class="docs-edit-link" href="https://github.com/JuliaReinforcementLearning/ReinforcementLearning.jl/blob/master/docs/experiments/experiments/DQN/JuliaRL_IQN_CartPole.jl" title="Edit on GitHub"><span class="docs-icon fab"></span><span class="docs-label is-hidden-touch">Edit on GitHub</span></a><a class="docs-settings-button fas fa-cog" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-sidebar-button fa fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a></div></header><article class="content" id="documenter-page"><h1 id="JuliaRL\\_IQN\\_CartPole"><a class="docs-heading-anchor" href="#JuliaRL\\_IQN\\_CartPole">JuliaRL_IQN_CartPole</a><a id="JuliaRL\\_IQN\\_CartPole-1"></a><a class="docs-heading-anchor-permalink" href="#JuliaRL\\_IQN\\_CartPole" title="Permalink"></a></h1><p><a href="../JuliaRL_IQN_CartPole.jl"><img src="https://img.shields.io/badge/download-julia-brightgreen.svg" alt="Source code"/></a> <a href="https://nbviewer.jupyter.org/github/JuliaReinforcementLearning/ReinforcementLearning.jl/blob/gh-pages/dev/experiments/experiments/DQN/JuliaRL_IQN_CartPole.ipynb"><img src="https://img.shields.io/badge/show-nbviewer-579ACA.svg" alt="notebook"/></a> <a href="https://github.com/findmyway"><img src="https://img.shields.io/badge/Author-Jun%20Tian-blue" alt="Author"/></a> <img src="https://img.shields.io/date/1621641600" alt="Update time"/></p><pre><code class="language-julia">using ReinforcementLearning
+using StableRNGs
+using Flux
+using Flux.Losses
+
+function RL.Experiment(
+    ::Val{:JuliaRL},
+    ::Val{:IQN},
+    ::Val{:CartPole},
+    ::Nothing;
+    seed = 123,
+)
+    rng = StableRNG(seed)
+    env = CartPoleEnv(; T = Float32, rng = rng)
+    ns, na = length(state(env)), length(action_space(env))
+    init = glorot_uniform(rng)
+    Nₑₘ = 16
+    n_hidden = 64
+    κ = 1.0f0
+
+    nn_creator() =
+        ImplicitQuantileNet(
+            ψ = Dense(ns, n_hidden, relu; init = init),
+            ϕ = Dense(Nₑₘ, n_hidden, relu; init = init),
+            header = Dense(n_hidden, na; init = init),
+        ) |&gt; cpu
+
+    agent = Agent(
+        policy = QBasedPolicy(
+            learner = IQNLearner(
+                approximator = NeuralNetworkApproximator(
+                    model = nn_creator(),
+                    optimizer = ADAM(0.001),
+                ),
+                target_approximator = NeuralNetworkApproximator(model = nn_creator()),
+                κ = κ,
+                N = 8,
+                N′ = 8,
+                Nₑₘ = Nₑₘ,
+                K = 32,
+                γ = 0.99f0,
+                stack_size = nothing,
+                batch_size = 32,
+                update_horizon = 1,
+                min_replay_history = 100,
+                update_freq = 1,
+                target_update_freq = 100,
+                default_priority = 1.0f2,
+                rng = rng,
+                device_rng = rng,
+            ),
+            explorer = EpsilonGreedyExplorer(
+                kind = :exp,
+                ϵ_stable = 0.01,
+                decay_steps = 500,
+                rng = rng,
+            ),
+        ),
+        trajectory = CircularArrayPSARTTrajectory(
+            capacity = 1000,
+            state = Vector{Float32} =&gt; (ns,),
+        ),
+    )
+
+    stop_condition = StopAfterStep(10_000, is_show_progress=!haskey(ENV, &quot;CI&quot;))
+    hook = TotalRewardPerEpisode()
+    Experiment(agent, env, stop_condition, hook, &quot;&quot;)
+end</code></pre><pre><code class="language-julia">using Plots
+ex = E`JuliaRL_IQN_CartPole`
+run(ex)
+plot(ex.hook.rewards)</code></pre><pre class="documenter-example-output">                     Total reward per episode
+             ┌────────────────────────────────────────┐
+         200 │⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⡇⢸⢀⢸⡇⢸⠉⡏⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│
+             │⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡏⣿⢸⢸⡿⡇⢸⠀⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│
+             │⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡇⣿⢸⢸⡇⣧⢸⠀⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│
+             │⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡇⢸⢸⣾⡇⢸⢸⠀⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│
+             │⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡇⢸⢸⣿⡇⢸⢸⠀⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│
+             │⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡇⠈⣾⡟⡇⢸⢸⠀⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│
+             │⠀⢀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡇⠀⣿⡇⡇⢸⣸⠀⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│
+   Score     │⠀⢸⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡄⡇⠀⣿⠇⠀⢸⣿⠀⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│
+             │⠀⢸⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣧⡇⠀⣿⠀⠀⠈⣿⠀⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│
+             │⠀⢸⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⠁⠀⣿⠀⠀⠀⠹⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│
+             │⠀⣾⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡀⠀⠀⢠⣿⠀⠀⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│
+             │⢠⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣷⢰⣷⣿⠃⠀⠀⡟⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│
+             │⣾⣿⠀⠀⠀⠀⠀⠀⠀⠀⡆⢸⢸⠿⡼⡟⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│
+             │⢸⠿⣄⡄⠀⠀⠀⠀⡄⡄⡇⣿⡞⠀⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│
+           0 │⠈⠀⠛⠙⠛⠓⠒⠛⠛⠛⠛⠃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│
+             └────────────────────────────────────────┘
+             0                                      200
+                              Episode</pre><p><img src="../assets/JuliaRL_IQN_CartPole.png" alt/></p><hr/><p><em>This page was generated using <a href="https://github.com/johnnychen94/DemoCards.jl">DemoCards.jl</a> and <a href="https://github.com/fredrikekre/Literate.jl">Literate.jl</a>.</em></p></article><nav class="docs-footer"><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Tuesday 13 July 2021 08:44">Tuesday 13 July 2021</span>. Using Julia version 1.6.1.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>

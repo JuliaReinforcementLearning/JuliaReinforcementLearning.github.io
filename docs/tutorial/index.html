@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Tutorial · ReinforcementLearning.jl</title><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-149861753-1', 'auto');
+ga('send', 'pageview', {'page': location.pathname + location.search + location.hash});
+</script><link href="https://fonts.googleapis.com/css?family=Lato|Roboto+Mono" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.0/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.0/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.0/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL=".."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="../assets/documenter.js"></script><script src="../siteinfo.js"></script><script src="../../versions.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/documenter-dark.css" data-theme-name="documenter-dark" data-theme-primary-dark/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="../assets/themeswap.js"></script><link href="../assets/favicon.ico" rel="icon" type="image/x-icon"/><link href="../assets/custom.css" rel="stylesheet" type="text/css"/><link href="../democards/gridtheme.css" rel="stylesheet" type="text/css"/></head><body><div id="documenter"><nav class="docs-sidebar"><a class="docs-logo" href="../"><img src="../assets/logo.svg" alt="ReinforcementLearning.jl logo"/></a><div class="docs-package-name"><span class="docs-autofit">ReinforcementLearning.jl</span></div><form class="docs-search" action="../search/"><input class="docs-search-query" id="documenter-search-query" name="q" type="text" placeholder="Search docs"/></form><ul class="docs-menu"><li><a class="tocitem" href="../">Home</a></li><li class="is-active"><a class="tocitem" href>Tutorial</a><ul class="internal"><li><a class="tocitem" href="#One-dimensional-Random-Walk"><span>One-dimensional Random Walk</span></a></li></ul></li><li><span class="tocitem">Guides</span><ul><li><a class="tocitem" href="../How_to_write_a_customized_environment/">How to write a customized environment?</a></li><li><a class="tocitem" href="../How_to_implement_a_new_algorithm/">How to implement a new algorithm?</a></li><li><a class="tocitem" href="../How_to_use_hooks/">How to use hooks?</a></li><li><a class="tocitem" href="../Which_algorithm_should_I_use/">Which algorithm should I use?</a></li></ul></li><li><a class="tocitem" href="../FAQ/">FAQ</a></li><li><a class="tocitem" href="../experiments/">Experiments</a></li><li><a class="tocitem" href="../tips/">Tips for Developers</a></li><li><span class="tocitem">Manual</span><ul><li><a class="tocitem" href="../rlbase/">RLBase</a></li><li><a class="tocitem" href="../rlcore/">RLCore</a></li><li><a class="tocitem" href="../rlenvs/">RLEnvs</a></li><li><a class="tocitem" href="../rlzoo/">RLZoo</a></li></ul></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><nav class="breadcrumb"><ul class="is-hidden-mobile"><li class="is-active"><a href>Tutorial</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href>Tutorial</a></li></ul></nav><div class="docs-right"><a class="docs-edit-link" href="https://github.com/JuliaReinforcementLearning/ReinforcementLearning.jl/blob/master/docs/src/tutorial.md" title="Edit on GitHub"><span class="docs-icon fab"></span><span class="docs-label is-hidden-touch">Edit on GitHub</span></a><a class="docs-settings-button fas fa-cog" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-sidebar-button fa fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a></div></header><article class="content" id="documenter-page"><h1 id="Tutorial"><a class="docs-heading-anchor" href="#Tutorial">Tutorial</a><a id="Tutorial-1"></a><a class="docs-heading-anchor-permalink" href="#Tutorial" title="Permalink"></a></h1><h2 id="One-dimensional-Random-Walk"><a class="docs-heading-anchor" href="#One-dimensional-Random-Walk">One-dimensional Random Walk</a><a id="One-dimensional-Random-Walk-1"></a><a class="docs-heading-anchor-permalink" href="#One-dimensional-Random-Walk" title="Permalink"></a></h2><p>Suppose that an agent is placed at the position <code>4</code> on the following number line. At each step, it can either move left or right. Here we use the integer <code>1</code> and <code>2</code> to represent them respectively. Whenever it reaches the end of the line, the game is terminated. A reward of <code>+1</code> is received if it stops at position 7 and a punishment of <code>-1</code> is received if it stops at position 1. In other cases, the reward is <code>0</code>.</p><p><img src="../assets/RandomWalk1D.png" alt/></p><p>This environment is already provided as <a href="../rlenvs/#ReinforcementLearningEnvironments.RandomWalk1D"><code>RandomWalk1D</code></a>. Let&#39;s get familiar with some basic interfaces first.</p><pre><code class="language-julia-repl">julia&gt; using ReinforcementLearning
+
+julia&gt; env = RandomWalk1D()
+# RandomWalk1D
+
+## Traits
+
+| Trait Type        |                Value |
+|:----------------- | --------------------:|
+| NumAgentStyle     |        SingleAgent() |
+| DynamicStyle      |         Sequential() |
+| InformationStyle  | PerfectInformation() |
+| ChanceStyle       |      Deterministic() |
+| RewardStyle       |     TerminalReward() |
+| UtilityStyle      |         GeneralSum() |
+| ActionStyle       |   MinimalActionSet() |
+| StateStyle        | Observation{Int64}() |
+| DefaultStateStyle | Observation{Int64}() |
+
+## Is Environment Terminated?
+
+No
+
+## Action Space
+
+`Base.OneTo(2)`
+
+julia&gt; S = state_space(env)
+Base.OneTo(7)
+
+julia&gt; s = state(env)  # the initial position
+4
+
+julia&gt; A = action_space(env)
+Base.OneTo(2)
+
+julia&gt; is_terminated(env)
+false
+
+julia&gt; while true
+           env(rand(A))
+           is_terminated(env) &amp;&amp; break
+       end
+
+julia&gt; state(env)
+1
+
+julia&gt; reward(env)
+-1.0</code></pre><p>You can find more detailed explanation of the functions used above at <a href="../rlbase/#ReinforcementLearningBase.jl">ReinforcementLearningBase.jl</a>.</p><p>In this simple game, we are interested in finding out an optimum policy for the agent to gain the maximum cumulative reward in an episode. The random selection policy above is a good benchmark. The only thing left is to calculate the total reward. Because such workflow is so common in reinforcement learning tasks, an extended <code>Base.run</code> function is provided so that we can desgin the workflow in a descriptive pattern.</p><pre><code class="language-julia-repl">julia&gt; run(
+           RandomPolicy(),
+           RandomWalk1D(),
+           StopAfterEpisode(10),
+           TotalRewardPerEpisode()
+       )
+                    Total reward per episode
+            ┌────────────────────────────────────────┐ 
+          1 │⠀⠀⠀⠀⠀⠀⠀⠀⢸⠉⠉⠉⠉⢇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣸⠀⠀⠀⠀⠀⠀⠀⠀⣾⠀⠀⠀⠀│ 
+            │⠀⠀⠀⠀⠀⠀⠀⠀⡜⠀⠀⠀⠀⢸⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡏⡆⠀⠀⠀⠀⠀⠀⠀⡟⡄⠀⠀⠀│ 
+            │⠀⠀⠀⠀⠀⠀⠀⠀⡇⠀⠀⠀⠀⠈⡆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢰⠁⡇⠀⠀⠀⠀⠀⠀⢸⠀⡇⠀⠀⠀│ 
+            │⠀⠀⠀⠀⠀⠀⠀⢰⠁⠀⠀⠀⠀⠀⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⠀⢸⠀⠀⠀⠀⠀⠀⡸⠀⢱⠀⠀⠀│ 
+            │⠀⠀⠀⠀⠀⠀⠀⡸⠀⠀⠀⠀⠀⠀⢸⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡇⠀⠸⡀⠀⠀⠀⠀⠀⡇⠀⢸⠀⠀⠀│ 
+            │⠀⠀⠀⠀⠀⠀⠀⡇⠀⠀⠀⠀⠀⠀⠸⡀⠀⠀⠀⠀⠀⠀⠀⠀⢀⠇⠀⠀⡇⠀⠀⠀⠀⢠⠃⠀⠀⡇⠀⠀│ 
+            │⠀⠀⠀⠀⠀⠀⢠⠃⠀⠀⠀⠀⠀⠀⠀⡇⠀⠀⠀⠀⠀⠀⠀⠀⢸⠀⠀⠀⢱⠀⠀⠀⠀⢸⠀⠀⠀⢇⠀⠀│ 
+   Score    │⠤⠤⠤⠤⠤⠤⢼⠤⠤⠤⠤⠤⠤⠤⠤⢧⠤⠤⠤⠤⠤⠤⠤⠤⡼⠤⠤⠤⢼⠤⠤⠤⠤⡧⠤⠤⠤⢼⠤⠤│ 
+            │⠀⠀⠀⠀⠀⠀⡎⠀⠀⠀⠀⠀⠀⠀⠀⢸⠀⠀⠀⠀⠀⠀⠀⠀⡇⠀⠀⠀⠀⡇⠀⠀⢀⠇⠀⠀⠀⠈⡆⠀│ 
+            │⠀⠀⠀⠀⠀⠀⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⡇⠀⠀⠀⠀⠀⠀⢸⠀⠀⠀⠀⠀⢇⠀⠀⢸⠀⠀⠀⠀⠀⡇⠀│ 
+            │⠀⠀⠀⠀⠀⢸⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢇⠀⠀⠀⠀⠀⠀⡸⠀⠀⠀⠀⠀⢸⠀⠀⡜⠀⠀⠀⠀⠀⢸⠀│ 
+            │⠀⠀⠀⠀⠀⡜⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⠀⠀⠀⠀⠀⠀⡇⠀⠀⠀⠀⠀⠘⡄⠀⡇⠀⠀⠀⠀⠀⠸⡀│ 
+            │⠀⠀⠀⠀⠀⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⡄⠀⠀⠀⠀⢠⠃⠀⠀⠀⠀⠀⠀⡇⢸⠀⠀⠀⠀⠀⠀⠀⡇│ 
+            │⠀⠀⠀⠀⢰⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡇⠀⠀⠀⠀⢸⠀⠀⠀⠀⠀⠀⠀⢸⡸⠀⠀⠀⠀⠀⠀⠀⢣│ 
+         -1 │⣀⣀⣀⣀⣸⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢱⣀⣀⣀⣀⡎⠀⠀⠀⠀⠀⠀⠀⠸⡇⠀⠀⠀⠀⠀⠀⠀⢸│ 
+            └────────────────────────────────────────┘ 
+            1                                       10
+                             Episode
+TotalRewardPerEpisode([-1.0, -1.0, 1.0, 1.0, -1.0, -1.0, 1.0, -1.0, 1.0, -1.0], 0.0, true)</code></pre><p>The <a href="../rlcore/#ReinforcementLearningCore.RandomPolicy"><code>RandomPolicy</code></a> simply draws a random element from the legal action set at each step. Beyond that, we can also set the action at each position ahead of time by using a <a href="../rlzoo/#ReinforcementLearningZoo.TabularPolicy"><code>TabularPolicy</code></a>.</p><pre><code class="language-julia-repl">julia&gt; NS, NA = length(S), length(A)
+(7, 2)
+
+julia&gt; policy = TabularPolicy(;table=Dict(zip(1:NS, fill(2, NS))))
+typename(TabularPolicy)
+├─ table =&gt; typename(Dict)
+└─ n_action =&gt; typename(Nothing)
+
+julia&gt; run(
+           policy,
+           RandomWalk1D(),
+           StopAfterEpisode(10),
+           TotalRewardPerEpisode()
+       )
+                   Total reward per episode
+           ┌────────────────────────────────────────┐ 
+         2 │⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│ 
+           │⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│ 
+           │⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│ 
+           │⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│ 
+           │⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│ 
+           │⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│ 
+           │⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│ 
+   Score   │⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤│ 
+           │⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│ 
+           │⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│ 
+           │⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│ 
+           │⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│ 
+           │⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│ 
+           │⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│ 
+         0 │⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│ 
+           └────────────────────────────────────────┘ 
+           1                                       10
+                            Episode
+TotalRewardPerEpisode([1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0], 0.0, true)</code></pre><p>Next, let&#39;s introduce one of the most common policies, the <a href="../rlcore/#ReinforcementLearningCore.QBasedPolicy"><code>QBasedPolicy</code></a>. It contains two parts, a state-action value function to estimate the estimated value of each state-action pair and an explorer to select which action to take based on the result of the state-action values.</p><pre><code class="language-julia-repl">julia&gt; using Flux: InvDecay
+
+julia&gt; policy = QBasedPolicy(
+           learner = MonteCarloLearner(;
+                   approximator=TabularQApproximator(
+                       ;n_state = NS,
+                       n_action = NA,
+                       opt = InvDecay(1.0)
+                   )
+               ),
+           explorer = EpsilonGreedyExplorer(0.1)
+       )
+typename(QBasedPolicy)
+├─ learner =&gt; typename(MonteCarloLearner)
+│  ├─ approximator =&gt; typename(TabularApproximator)
+│  │  ├─ table =&gt; 2×7 Matrix{Float64}
+│  │  └─ optimizer =&gt; typename(Flux.Optimise.InvDecay)
+│  │     ├─ gamma =&gt; 1.0
+│  │     └─ state =&gt; typename(IdDict)
+│  ├─ γ =&gt; 1.0
+│  ├─ kind =&gt; typename(ReinforcementLearningZoo.FirstVisit)
+│  └─ sampling =&gt; typename(ReinforcementLearningZoo.NoSampling)
+└─ explorer =&gt; typename(EpsilonGreedyExplorer)
+   ├─ ϵ_stable =&gt; 0.1
+   ├─ ϵ_init =&gt; 1.0
+   ├─ warmup_steps =&gt; 0
+   ├─ decay_steps =&gt; 0
+   ├─ step =&gt; 1
+   ├─ rng =&gt; typename(Random._GLOBAL_RNG)
+   └─ is_training =&gt; true</code></pre><p>Here we choose the <a href="../rlzoo/#ReinforcementLearningZoo.MonteCarloLearner"><code>MonteCarloLearner</code></a> and the <a href="../rlcore/#ReinforcementLearningCore.EpsilonGreedyExplorer"><code>EpsilonGreedyExplorer</code></a>. But you can also replace them with some other Q value learners or value explorers. Similar to what we did before, we can apply this policy to the <code>env</code> to estimate its performance.</p><pre><code class="language-julia-repl">julia&gt; run(
+           policy,
+           RandomWalk1D(),
+           StopAfterEpisode(10),
+           TotalRewardPerEpisode()
+       )
+                    Total reward per episode
+            ┌────────────────────────────────────────┐ 
+          0 │⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│ 
+            │⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│ 
+            │⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│ 
+            │⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│ 
+            │⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│ 
+            │⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│ 
+            │⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│ 
+   Score    │⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤│ 
+            │⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│ 
+            │⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│ 
+            │⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│ 
+            │⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│ 
+            │⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│ 
+            │⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│ 
+         -2 │⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│ 
+            └────────────────────────────────────────┘ 
+            1                                       10
+                             Episode
+TotalRewardPerEpisode([-1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0], 0.0, true)</code></pre><p>Until now, the policies we&#39;ve seen are very simple ones. There&#39;re no optimizations involved in these policies. We call that they are in the <strong>actor</strong> mode, which means they only generate actions statically at each step. However, our main goal in reinforcement learning is to improve our policy during the interactions with the environments. We say the policy is in the <strong>learner</strong> mode in this case. To run policies in the <strong>learner</strong> mode, a dedicated wrapper policy <a href="../rlcore/#ReinforcementLearningCore.Agent"><code>Agent</code></a> is provided.</p><pre><code class="language-julia-repl">julia&gt; agent = Agent(
+           policy = policy,
+           trajectory = VectorSARTTrajectory()
+       )
+typename(Agent)
+├─ policy =&gt; typename(QBasedPolicy)
+│  ├─ learner =&gt; typename(MonteCarloLearner)
+│  │  ├─ approximator =&gt; typename(TabularApproximator)
+│  │  │  ├─ table =&gt; 2×7 Matrix{Float64}
+│  │  │  └─ optimizer =&gt; typename(Flux.Optimise.InvDecay)
+│  │  │     ├─ gamma =&gt; 1.0
+│  │  │     └─ state =&gt; typename(IdDict)
+│  │  ├─ γ =&gt; 1.0
+│  │  ├─ kind =&gt; typename(ReinforcementLearningZoo.FirstVisit)
+│  │  └─ sampling =&gt; typename(ReinforcementLearningZoo.NoSampling)
+│  └─ explorer =&gt; typename(EpsilonGreedyExplorer)
+│     ├─ ϵ_stable =&gt; 0.1
+│     ├─ ϵ_init =&gt; 1.0
+│     ├─ warmup_steps =&gt; 0
+│     ├─ decay_steps =&gt; 0
+│     ├─ step =&gt; 31
+│     ├─ rng =&gt; typename(Random._GLOBAL_RNG)
+│     └─ is_training =&gt; true
+└─ trajectory =&gt; typename(Trajectory)
+   └─ traces =&gt; typename(NamedTuple)
+      ├─ state =&gt; 0-element Vector{Int64}
+      ├─ action =&gt; 0-element Vector{Int64}
+      ├─ reward =&gt; 0-element Vector{Float32}
+      └─ terminal =&gt; 0-element Vector{Bool}
+
+julia&gt; run(agent, env, StopAfterEpisode(10), TotalRewardPerEpisode())
+                    Total reward per episode
+            ┌────────────────────────────────────────┐ 
+          1 │⠀⠀⠀⠀⡏⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⢹⠀⠀⠀⠀⠀⠀⠀⠀⡸⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉│ 
+            │⠀⠀⠀⢠⠃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡇⠀⠀⠀⠀⠀⠀⠀⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│ 
+            │⠀⠀⠀⢸⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢣⠀⠀⠀⠀⠀⠀⢰⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│ 
+            │⠀⠀⠀⡎⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⠀⠀⠀⠀⠀⠀⢸⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│ 
+            │⠀⠀⠀⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⡆⠀⠀⠀⠀⠀⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│ 
+            │⠀⠀⢸⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡇⠀⠀⠀⠀⢀⠇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│ 
+            │⠀⠀⡸⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⠀⠀⠀⠀⢸⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│ 
+   Score    │⠤⠤⡧⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠼⡤⠤⠤⠤⡼⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤⠤│ 
+            │⠀⢠⠃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡇⠀⠀⠀⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│ 
+            │⠀⢸⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢱⠀⠀⢸⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│ 
+            │⠀⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⠀⠀⡸⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│ 
+            │⢀⠇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡇⠀⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│ 
+            │⢸⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢇⢠⠃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│ 
+            │⡜⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⢸⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│ 
+         -1 │⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⡎⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀│ 
+            └────────────────────────────────────────┘ 
+            1                                       10
+                             Episode
+TotalRewardPerEpisode([-1.0, 1.0, 1.0, 1.0, 1.0, -1.0, 1.0, 1.0, 1.0, 1.0], 0.0, true)</code></pre><p>Here the <a href="@ref"><code>VectorSARTTrajectory</code></a> is used to store the <strong>S</strong>tate, <strong>A</strong>ction, <strong>R</strong>eward, is_<strong>T</strong>erminated info during interactions with the environment.</p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../">« Home</a><a class="docs-footer-nextpage" href="../How_to_write_a_customized_environment/">How to write a customized environment? »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Tuesday 13 July 2021 08:44">Tuesday 13 July 2021</span>. Using Julia version 1.6.1.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>

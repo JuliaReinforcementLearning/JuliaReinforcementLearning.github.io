@@ -1,0 +1,5 @@
+LoadError: MethodError: no method matching ReinforcementLearningCore.Experiment(::Val{:JuliaRL}, ::Val{:BasicDQN}, ::Val{:CartPole}, ::Nothing)
+Closest candidates are:
+  ReinforcementLearningCore.Experiment(::Any, ::Any, ::Any, ::Any, !Matched::String) at /home/runner/work/ReinforcementLearning.jl/ReinforcementLearning.jl/src/ReinforcementLearningCore/src/core/experiment.jl:18
+  ReinforcementLearningCore.Experiment(::Any, ::Any, ::Any, ::Any, !Matched::Any) at /home/runner/work/ReinforcementLearning.jl/ReinforcementLearning.jl/src/ReinforcementLearningCore/src/core/experiment.jl:18
+in expression starting at none:1

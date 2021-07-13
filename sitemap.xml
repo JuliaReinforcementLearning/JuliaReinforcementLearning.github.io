@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
+<url>
+    <loc>guide/index.html</loc>
+    <lastmod>2021-07-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+</url>
+<url>
+    <loc>contribute/index.html</loc>
+    <lastmod>2021-07-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+</url>
+<url>
+    <loc>blog/index.html</loc>
+    <lastmod>2021-07-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+</url>
+<url>
+    <loc>blog/an_introduction_to_reinforcement_learning_jl_design_implementations_thoughts/index.html</loc>
+    <lastmod>2021-07-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+</url>
+<url>
+    <loc>index/</loc>
+    <lastmod>2021-07-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+</url>
+<url>
+    <loc>blog/notebooks_for_reinforcement_learning_an_introduction/Chapter02_Ten_Armed_Testbed.jl</loc>
+    <lastmod>2021-07-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+</url>
+<url>
+    <loc>blog/notebooks_for_reinforcement_learning_an_introduction/Chapter12_Random_Walk.jl</loc>
+    <lastmod>2021-07-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+</url>
+<url>
+    <loc>blog/notebooks_for_reinforcement_learning_an_introduction/Chapter10_Access_Control.jl</loc>
+    <lastmod>2021-07-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+</url>
+<url>
+    <loc>blog/notebooks_for_reinforcement_learning_an_introduction/Chapter08_Trajectory_Sampling.jl</loc>
+    <lastmod>2021-07-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+</url>
+<url>
+    <loc>blog/notebooks_for_reinforcement_learning_an_introduction/Chapter05_Left_Right.jl</loc>
+    <lastmod>2021-07-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+</url>
+<url>
+    <loc>blog/notebooks_for_reinforcement_learning_an_introduction/Chapter04_Car_Rental.jl</loc>
+    <lastmod>2021-07-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+</url>
+<url>
+    <loc>blog/notebooks_for_reinforcement_learning_an_introduction/Chapter09_Random_Walk.jl</loc>
+    <lastmod>2021-07-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+</url>
+<url>
+    <loc>blog/notebooks_for_reinforcement_learning_an_introduction/Chapter11_Counter_Example.jl</loc>
+    <lastmod>2021-07-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+</url>
+<url>
+    <loc>blog/notebooks_for_reinforcement_learning_an_introduction/Chapter06_Cliff_Walking.jl</loc>
+    <lastmod>2021-07-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+</url>
+<url>
+    <loc>blog/notebooks_for_reinforcement_learning_an_introduction/Chapter01_Tic_Tac_Toe.jl</loc>
+    <lastmod>2021-07-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+</url>
+<url>
+    <loc>blog/notebooks_for_reinforcement_learning_an_introduction/Chapter10_Mountain_Car.jl</loc>
+    <lastmod>2021-07-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+</url>
+<url>
+    <loc>blog/notebooks_for_reinforcement_learning_an_introduction/Chapter06_Maximization_Bias.jl</loc>
+    <lastmod>2021-07-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+</url>
+<url>
+    <loc>blog/notebooks_for_reinforcement_learning_an_introduction/Chapter05_Blackjack.jl</loc>
+    <lastmod>2021-07-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+</url>
+<url>
+    <loc>blog/notebooks_for_reinforcement_learning_an_introduction/Chapter06_RandomWalk.jl</loc>
+    <lastmod>2021-07-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+</url>
+<url>
+    <loc>blog/notebooks_for_reinforcement_learning_an_introduction/Chapter04_Grid_World.jl</loc>
+    <lastmod>2021-07-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+</url>
+<url>
+    <loc>blog/notebooks_for_reinforcement_learning_an_introduction/Chapter06_Windy_Grid_World.jl</loc>
+    <lastmod>2021-07-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+</url>
+<url>
+    <loc>blog/notebooks_for_reinforcement_learning_an_introduction/Chapter08_Expectation_VS_Sample.jl</loc>
+    <lastmod>2021-07-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+</url>
+<url>
+    <loc>blog/notebooks_for_reinforcement_learning_an_introduction/Chapter08_Maze.jl</loc>
+    <lastmod>2021-07-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+</url>
+<url>
+    <loc>blog/notebooks_for_reinforcement_learning_an_introduction/Chapter04_Gambler_Problem.jl</loc>
+    <lastmod>2021-07-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+</url>
+<url>
+    <loc>blog/notebooks_for_reinforcement_learning_an_introduction/Chapter03_Grid_World.jl</loc>
+    <lastmod>2021-07-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+</url>
+<url>
+    <loc>blog/notebooks_for_reinforcement_learning_an_introduction/Chapter13_Short_Corridor.jl</loc>
+    <lastmod>2021-07-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+</url>
+<url>
+    <loc>blog/notebooks_for_reinforcement_learning_an_introduction/Chapter07_Random_Walk.jl</loc>
+    <lastmod>2021-07-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+</url>
+</urlset>

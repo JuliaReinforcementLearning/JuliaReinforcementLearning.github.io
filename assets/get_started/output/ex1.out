@@ -1,0 +1,3 @@
+ArgumentError: Package PyPlot not found in current path:
+- Run `import Pkg; Pkg.add("PyPlot")` to install the PyPlot package.
+
