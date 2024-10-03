@@ -1,0 +1,252 @@
+<!doctype html> <html lang=en > <script async src="https://www.googletagmanager.com/gtag/js?id=UA-149861753-1"></script> <script> window.dataLayer = window.dataLayer || []; function gtag() { dataLayer.push(arguments); } gtag('js', new Date()); gtag('config', 'UA-149861753-1'); </script> <meta charset=utf-8 > <meta name=viewport  content="width=device-width, initial-scale=1, shrink-to-fit=no"> <link rel=icon  href="/assets/site/logo.svg"> <link rel=stylesheet  href="/libs/katex/katex.min.css"> <link rel=stylesheet  href="/libs/highlight/github.min.css"> <title>Enriching Offline Reinforcement Learning Algorithms in ReinforcementLearning.jl</title> <link rel=stylesheet  href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin=anonymous > <link href="/css/custom.css" rel=stylesheet > <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin=anonymous ></script> <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin=anonymous ></script> <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin=anonymous ></script> <script src="/libs/distill/template.v2.8.0.js"></script> <d-front-matter> <script id=distill-front-matter  type="text/json"> { "authors": [ { "author":"Guoyu Yang", "authorURL":"https://github.com/pilgrimygy", "affiliation":"Nanjing University, LAMDA Group", "affiliationURL":"https://www.lamda.nju.edu.cn" } ], "publishedDate":"2021-08-15", "citationText":"Guoyu Yang, 2021" } </script> </d-front-matter> <nav class="navbar navbar-expand-lg navbar-dark fixed-top" style="background-color: #1fd1f9; background-image: linear-gradient(315deg, #1fd1f9 0%, #b621fe 74%); " id=mainNav > <div class=container > <button class=navbar-toggler  type=button  data-toggle=collapse  data-target="#navbarTogglerDemo01" aria-controls=navbarTogglerDemo01  aria-expanded=false  aria-label="Toggle navigation"> <span class=navbar-toggler-icon ></span> </button> <div class="collapse navbar-collapse" id=navbarTogglerDemo01 > <span class=navbar-brand > <a class=navbar-brand  href="/"> JuliaReinforcementLearning </a> </span> <ul class="navbar-nav ml-auto"> <!-- <li class=nav-item > <a class=nav-link  href="/get_started/">Get Started</a> --> <!-- <li class=nav-item > <a class=nav-link  href="/guide/">Guide</a> <li class=nav-item > <a class=nav-link  href="/contribute/">Contribute</a> --> <li class=nav-item > <a class=nav-link  href="/docs/">Doc</a> <li class=nav-item > <a class=nav-link  href="https://github.com/JuliaReinforcementLearning">Github</a> </ul> </div> </nav> <d-title><h1>Enriching Offline Reinforcement Learning Algorithms in ReinforcementLearning.jl</h1><p>This is the phase 1 technical report of the summer OSPP project <a href="https://summer.iscas.ac.cn/#/org/prodetail/210370539?lang&#61;en">Enriching Offline Reinforcement Learning Algorithms in ReinforcementLearning.jl</a> used for mid-term evaluation. The report is split into the following parts: <a href="/blog/phase1_technical_report_of_enriching_offline_reinforcement_learning_algorithms_in_reinforcement_learning_jl/#project_information"><strong>Project Information</strong></a>, <a href="/blog/phase1_technical_report_of_enriching_offline_reinforcement_learning_algorithms_in_reinforcement_learning_jl/#project_schedule"><strong>Project Schedule</strong></a> and <a href="/blog/phase1_technical_report_of_enriching_offline_reinforcement_learning_algorithms_in_reinforcement_learning_jl/#future_plan"><strong>Future Plan</strong></a>.</p> </d-title> <d-byline></d-byline> <hr class=franklin-toc-separator > <d-article class=franklin-content > <h3 class=franklin-toc-header >Table of content</h3> <div class=franklin-toc ><ol><li><a href="#technical_report">Technical Report</a><ol><li><a href="#project_information">Project Information</a><li><a href="#project_schedule">Project Schedule</a><ol><li><a href="#basic_framework">Basic framework</a></ol><li><a href="#useful_components">Useful Components</a><ol><li><a href="#gaussiannetwork">GaussianNetwork</a></ol><li><a href="#variational_auto-encoder_vae">Variational Auto-Encoder &#40;VAE&#41;</a><li><a href="#offline_rl_algorithms">Offline RL Algorithms</a><ol><li><a href="#benchmark">Benchmark</a></ol><li><a href="#conservative_q-learning_cql">Conservative Q-Learning &#40;CQL&#41;</a><li><a href="#critic_regularizer_regression_crr">Critic Regularizer Regression &#40;CRR&#41;</a><li><a href="#policy_in_the_latent_action_space_plas">Policy in the Latent Action Space &#40;PLAS&#41;</a><li><a href="#other_work">Other Work</a><li><a href="#conclusion">Conclusion</a><li><a href="#future_plan">Future Plan</a></ol></ol></div> </d-article> <hr class=franklin-toc-separator > <d-article class=franklin-content ><h1 id=technical_report ><a href="#technical_report" class=header-anchor >Technical Report</a></h1> <p>This technical report is the first evaluation report of Project &quot;Enriching Offline Reinforcement Learning Algorithms in ReinforcementLearning.jl&quot; in OSPP. It includes three components: project information, project schedule, future plan.</p> <h2 id=project_information ><a href="#project_information" class=header-anchor >Project Information</a></h2> <ul> <li><p>Project name: Enriching Offline Reinforcement Learning Algorithms in ReinforcementLearning.jl</p> <li><p>Scheme Description: Recent advances in offline reinforcement learning make it possible to turn reinforcement learning into a data-driven discipline, such that many effective methods from the supervised learning field could be applied. Until now, the only offline method provided in ReinforcementLearning.jl is Behavior Cloning &#40;BC&#41;<d-cite key=michie1990cognitive ></d-cite>. We&#39;d like to have more algorithms added like Batch Constrain Q-Learning &#40;BCQ&#41;<d-cite key="DBLP:conf/icml/FujimotoMP19"></d-cite>, Conservative Q-Learning &#40;CQL&#41;<d-cite key="DBLP:conf/nips/KumarZTL20"></d-cite>. It is expected to implement at least three to four modern offline RL algorithms.</p> <li><p>Time planning: the following is a relatively simple time table.</p> </ul> <table><tr><th align=center >Date<th align=center >Work<tr><td align=center >Prior - June 30<td align=center >Preliminary research, including algorithm papers, ReinforcementLearning.jl library code, etc.<tr><td align=center >The first phase<td align=center ><tr><td align=center >July1 - July15<td align=center >Design and build the framework of offline RL.<tr><td align=center >July16 - July31<td align=center >Implement and experiment offline DQN and offline SAC as benchmark.<tr><td align=center >August1 - August15<td align=center >Write build-in documentation and technical report. Implement and experiment CRR.<tr><td align=center >The second phase<td align=center ><tr><td align=center >August16 - August31<td align=center >Implement and experiment PLAS.<tr><td align=center >September1 - September15<td align=center >Research, implement and experiment new SOTA offline RL algorithms.<tr><td align=center >September16 - September30<td align=center >Write build-in documentation and technical report. Buffer for unexpected delay.<tr><td align=center >After project<td align=center >Carry on fixing issues and maintaining implemented algorithms.</table> <h2 id=project_schedule ><a href="#project_schedule" class=header-anchor >Project Schedule</a></h2> <p>This part mainly introduces the results of the first phase.</p> <h4 id=basic_framework ><a href="#basic_framework" class=header-anchor >Basic framework</a></h4> <p>To run and test the offline algorithm, we first implemented <a href="https://github.com/JuliaReinforcementLearning/ReinforcementLearning.jl/blob/master/src/ReinforcementLearningZoo/src/algorithms/offline_rl/common.jl"><code>OfflinePolicy</code></a>.</p> <pre><code class="julia hljs">Base.<span class=hljs-meta >@kwdef</span> <span class=hljs-keyword >struct</span> OfflinePolicy{L,T} &lt;: AbstractPolicy
+    learner::L
+    dataset::T
+    continuous::<span class=hljs-built_in >Bool</span>
+    batchsize::<span class=hljs-built_in >Int</span>
+<span class=hljs-keyword >end</span></code></pre> <p>This implementation of <code>OfflinePolicy</code> refers to <a href="https://juliareinforcementlearning.org/docs/rlcore/#ReinforcementLearningCore.QBasedPolicy"><code>QBasePolicy</code></a>. It provides a parameter <code>continuous</code> to support different action space types, including continuous and discrete. <code>learner</code> is a specific algorithm for learning and providing policy. <code>dataset</code> and <code>batchsize</code> are used to sample data for learning.</p> <p>Besides, we implement corresponding functions <code>π</code>, <code>update&#33;</code> and <code>sample</code>. <code>π</code> is used to select the action, whose form is determined by the type of action space. <code>update&#33;</code> can be used in two stages. In <code>PreExperiment</code> stage, we can call this function for pre-training algorithms with <code>pretrain_step</code> parameters. In <code>PreAct</code> stage, we call this function for training the <code>learner</code>. In function <code>update&#33;</code>, we need to call function <code>sample</code> to sample a batch of data from the dataset. With the development of <a href="https://github.com/JuliaReinforcementLearning/ReinforcementLearning.jl/tree/master/src/ReinforcementLearningDatasets">ReinforcementLearningDataset.jl</a>, the <code>sample</code> function will be deprecated.</p> <p>We can quickly call the offline version of the existing algorithms with almost no additional code with this framework. Therefore, the implementation and performance testing of offline DQN<d-cite key=mnih2015human ></d-cite> and offline SAC<d-cite key="DBLP:journals/corr/abs-1812-05905"></d-cite> can be completed soon. For example:</p> <pre><code class="julia hljs">offline_dqn_policy = OfflinePolicy(
+    learner = DQNLearner(
+        <span class=hljs-comment ># Omit specific code</span>
+    ),
+    dataset = dataset,
+    continuous = <span class=hljs-literal >false</span>,
+    batchsize = <span class=hljs-number >64</span>,
+)</code></pre> <p>Therefore, we unify the parameter name in different algorithms so that different <code>learner</code>s can be compatible with <code>OfflinePolicy</code>.</p> <h4 id=useful_components ><a href="#useful_components" class=header-anchor >Useful Components</a></h4> <h5 id=gaussiannetwork ><a href="#gaussiannetwork" class=header-anchor >GaussianNetwork</a></h5> <p><a href="https://juliareinforcementlearning.org/docs/rlcore/#ReinforcementLearningCore.GaussianNetwork">GaussianNetwork</a> models a Normal Distribution <span class=katex ><span class=katex-mathml ><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant=script >N</mi><mo stretchy=false >(</mo><mi>μ</mi><mo separator=true >,</mo><msup><mi>σ</mi><mn>2</mn></msup><mo stretchy=false >)</mo></mrow><annotation encoding="application/x-tex">\mathcal{N}(\mu,\sigma^2)</annotation></semantics></math></span><span class=katex-html  aria-hidden=true ><span class=base ><span class=strut  style="height:1.0641em;vertical-align:-0.25em;"></span><span class="mord mathcal" style="margin-right:0.14736em;">N</span><span class=mopen >(</span><span class="mord mathnormal">μ</span><span class=mpunct >,</span><span class=mspace  style="margin-right:0.1667em;"></span><span class=mord ><span class="mord mathnormal" style="margin-right:0.03588em;">σ</span><span class=msupsub ><span class=vlist-t ><span class=vlist-r ><span class=vlist  style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class=pstrut  style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class=mclose >)</span></span></span></span>, which is often used in tasks with continuous action space. It consists of three neural network chains:</p> <pre><code class="julia hljs">Base.<span class=hljs-meta >@kwdef</span> <span class=hljs-keyword >struct</span> GaussianNetwork{P,U,S}
+    pre::P = identity
+    μ::U
+    logσ::S
+    min_σ::<span class=hljs-built_in >Float32</span> = <span class=hljs-number >0f0</span>
+    max_σ::<span class=hljs-built_in >Float32</span> = <span class=hljs-literal >Inf32</span>
+<span class=hljs-keyword >end</span></code></pre> <p>We implement the evaluation function and inference function of <code>GaussianNetwork</code>. By evaluation function, given the state, then the mean and log-standard deviation are obtained. Furthermore, we can sample the action from distribution and get the probability of the action in a given state. When calling the inference function with parameter state and action, we get the likelihood of the action in a given state.</p> <pre><code class="julia hljs"><span class=hljs-comment >### Evaluation</span>
+<span class=hljs-keyword >function</span> (model::GaussianNetwork)(state; is_sampling::<span class=hljs-built_in >Bool</span>=<span class=hljs-literal >false</span>, is_return_log_prob::<span class=hljs-built_in >Bool</span>=<span class=hljs-literal >false</span>)
+    <span class=hljs-comment ># Omit specific code</span>
+    <span class=hljs-keyword >if</span> is_sampling
+        <span class=hljs-keyword >if</span> is_return_log_prob
+            <span class=hljs-keyword >return</span> tanh.(z), logp_π
+        <span class=hljs-keyword >else</span>
+            <span class=hljs-keyword >return</span> tanh.(z)
+        <span class=hljs-keyword >end</span>
+    <span class=hljs-keyword >else</span>
+        <span class=hljs-keyword >return</span> μ, logσ
+    <span class=hljs-keyword >end</span>
+<span class=hljs-keyword >end</span>
+<span class=hljs-comment >### Inference</span>
+<span class=hljs-keyword >function</span> (model::GaussianNetwork)(state, action)
+    <span class=hljs-comment ># Omit specific code</span>
+    <span class=hljs-keyword >return</span> logp_π
+<span class=hljs-keyword >end</span></code></pre> <h5 id=variational_auto-encoder_vae ><a href="#variational_auto-encoder_vae" class=header-anchor >Variational Auto-Encoder &#40;VAE&#41;</a></h5> <p>In offline reinforcement learning tasks, VAE<d-cite key="DBLP:journals/corr/KingmaW13"></d-cite> is often used to learn from datasets to approximate behavior policy.</p> <p>The VAE we implemented contains two neural networks: <code>encoder</code> and <code>decoder</code> &#40;<a href="https://juliareinforcementlearning.org/docs/rlcore/#ReinforcementLearningCore.VAE">link</a>&#41;.</p> <pre><code class="julia hljs">Base.<span class=hljs-meta >@kwdef</span> <span class=hljs-keyword >struct</span> VAE{E, D}
+    encoder::E
+    decoder::D
+<span class=hljs-keyword >end</span></code></pre> <p>In the encoding stage, it accepts input state and action and outputs the mean and standard deviation of the distribution. Afterward, the hidden action is obtained by sampling from the resulted distribution. In the decoding stage, state and hidden action are used as the input to reconstruct action.</p> <p>During training, we call the <code>vae_loss</code> function to get the reconstruction loss and <a href="https://en.wikipedia.org/wiki/Kullback&#37;E2&#37;80&#37;93Leibler_divergence">KL loss</a>. The specific task determines the ratio of these two losses.</p> <pre><code class="julia hljs"><span class=hljs-keyword >function</span> vae_loss(model::VAE, state, action)
+    <span class=hljs-comment ># Omit specific code</span>
+    <span class=hljs-keyword >return</span> recon_loss, kl_loss
+<span class=hljs-keyword >end</span></code></pre> <p>In the specific algorithm, the functions that may need to be called are as follows:</p> <pre><code class="julia hljs"><span class=hljs-comment >### Encode + decode</span>
+<span class=hljs-keyword >function</span> (model::VAE)(state, action)
+    <span class=hljs-comment >### Omit specific code</span>
+    <span class=hljs-keyword >return</span> a, μ, σ
+<span class=hljs-keyword >end</span>
+<span class=hljs-comment >### Decode</span>
+<span class=hljs-keyword >function</span> decode(model::VAE, state, z)
+    <span class=hljs-comment >### Omit specific code</span>
+    <span class=hljs-keyword >return</span> a
+<span class=hljs-keyword >end</span></code></pre> <h4 id=offline_rl_algorithms ><a href="#offline_rl_algorithms" class=header-anchor >Offline RL Algorithms</a></h4> <p>We used the existing algorithms and hooks to train the offline RL algorithm to create datasets in several environments &#40;such as <a href="https://juliareinforcementlearning.org/docs/rlenvs/#ReinforcementLearningEnvironments.CartPoleEnv-Tuple&#123;&#125;">CartPole</a>, <a href="https://juliareinforcementlearning.org/docs/rlenvs/#ReinforcementLearningEnvironments.PendulumEnv-Tuple&#123;&#125;">Pendulum</a>&#41; for training. This work can guide the subsequent development of package ReinforcementLearningDataset.jl, for example:</p> <pre><code class="julia hljs">gen_dataset(<span class=hljs-string >&quot;JuliaRL-CartPole-DQN&quot;</span>, policy, env)</code></pre>
+<h5 id=benchmark ><a href="#benchmark" class=header-anchor >Benchmark</a></h5>
+<p>We implement and experiment with offline DQN &#40;in discrete action space&#41; and offline SAC &#40;in continuous action space&#41; as benchmarks. The performance of offline DQN in Cartpole environment:</p>
+<figure class="l-body text-center">
+    <img src="/blog/phase1_technical_report_of_enriching_offline_reinforcement_learning_algorithms_in_reinforcement_learning_jl/JuliaRL_OfflineDQN_CartPole.png">
+    <figcaption></figcaption>
+</figure>
+
+<p>The performance of offline SAC in Pendulum environment:</p>
+<figure class="l-body text-center">
+    <img src="/blog/phase1_technical_report_of_enriching_offline_reinforcement_learning_algorithms_in_reinforcement_learning_jl/JuliaRL_SAC_Pendulum.png">
+    <figcaption></figcaption>
+</figure>
+
+<h5 id=conservative_q-learning_cql ><a href="#conservative_q-learning_cql" class=header-anchor >Conservative Q-Learning &#40;CQL&#41;</a></h5>
+<p>CQL is an efficient and straightforward Q-value constraint method. Other offline RL algorithms can easily use this constraint to improve performance. Therefore, we implement CQL as a common component &#40;<a href="https://github.com/JuliaReinforcementLearning/ReinforcementLearning.jl/blob/master/src/ReinforcementLearningCore/src/policies/q_based_policies/learners/approximators/neural_network_approximator.jl">link</a>&#41;. For other algorithms, we only need to add CQL loss to their loss.</p>
+<pre><code class="julia hljs"><span class=hljs-keyword >function</span> calculate_CQL_loss(q_value, qa_value)
+    cql_loss = mean(log.(sum(exp.(q_value), dims=<span class=hljs-number >1</span>)) .- qa_value)
+    <span class=hljs-keyword >return</span> cql_loss
+<span class=hljs-keyword >end</span>
+<span class=hljs-comment >### DQN loss</span>
+gs = gradient(params(Q)) <span class=hljs-keyword >do</span>
+        q = Q(s)[a]
+        loss = loss_func(G, q)
+        ignore() <span class=hljs-keyword >do</span>
+            learner.loss = loss
+        <span class=hljs-keyword >end</span>
+        loss + calculate_CQL_loss(Q(s), q)
+    <span class=hljs-keyword >end</span></code></pre>
+<p>After adding CQL loss, the performance of offline DQN improve.</p>
+<figure class="l-body text-center">
+    <img src="/blog/phase1_technical_report_of_enriching_offline_reinforcement_learning_algorithms_in_reinforcement_learning_jl/JuliaRL_OfflineDQN_CQL_CartPole.png">
+    <figcaption></figcaption>
+</figure>
+
+<p>Currently, this function only supports discrete action space and CQL&#40;H&#41; method. </p>
+<h5 id=critic_regularizer_regression_crr ><a href="#critic_regularizer_regression_crr" class=header-anchor >Critic Regularizer Regression &#40;CRR&#41;</a></h5>
+<p>CRR<d-cite key="DBLP:conf/nips/0001NZMSRSSGHF20"></d-cite> is a Behavior Cloning based method. To filter out bad actions and enables learning better policies from low-quality data, CRR utilizes the advantage function to regularize the learning objective of the actor. Pseudocode is as follows:</p>
+<figure class="l-body text-center">
+    <img src="/blog/phase1_technical_report_of_enriching_offline_reinforcement_learning_algorithms_in_reinforcement_learning_jl/CRR.png">
+    <figcaption></figcaption>
+</figure>
+
+<p>In different tasks, <span class=katex ><span class=katex-mathml ><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>f</mi></mrow><annotation encoding="application/x-tex">f</annotation></semantics></math></span><span class=katex-html  aria-hidden=true ><span class=base ><span class=strut  style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.10764em;">f</span></span></span></span> has different choices:</p>
+<span class=katex-display ><span class=katex ><span class=katex-mathml ><math xmlns="http://www.w3.org/1998/Math/MathML" display=block ><semantics><mrow><mi>𝑓</mi><mo>=</mo><mi mathvariant=double-struck >I</mi><mo stretchy=false >[</mo><msub><mi>A</mi><mi>θ</mi></msub><mo stretchy=false >(</mo><mi>s</mi><mo separator=true >,</mo><mi>a</mi><mo stretchy=false >)</mo><mo>&gt;</mo><mn>0</mn><mo stretchy=false >]</mo><mspace width=1em /><mrow><mi>o</mi><mi>r</mi></mrow><mspace width=1em /><mi>f</mi><mo>=</mo><msup><mi>e</mi><mrow><msub><mi>A</mi><mi>θ</mi></msub><mo stretchy=false >(</mo><mi>s</mi><mo separator=true >,</mo><mi>a</mi><mo stretchy=false >)</mo><mi mathvariant=normal >/</mi><mi>β</mi></mrow></msup></mrow><annotation encoding="application/x-tex">
+𝑓=\mathbb{I}[A_\theta(s,a)&gt;0]\quad \mathnormal{or}\quad f=e^{A_\theta(s,a)/\beta}
+</annotation></semantics></math></span><span class=katex-html  aria-hidden=true ><span class=base ><span class=strut  style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.10764em;">f</span><span class=mspace  style="margin-right:0.2778em;"></span><span class=mrel >=</span><span class=mspace  style="margin-right:0.2778em;"></span></span><span class=base ><span class=strut  style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathbb">I</span><span class=mopen >[</span><span class=mord ><span class="mord mathnormal">A</span><span class=msupsub ><span class="vlist-t vlist-t2"><span class=vlist-r ><span class=vlist  style="height:0.3361em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class=pstrut  style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.02778em;">θ</span></span></span></span><span class=vlist-s >​</span></span><span class=vlist-r ><span class=vlist  style="height:0.15em;"><span></span></span></span></span></span></span><span class=mopen >(</span><span class="mord mathnormal">s</span><span class=mpunct >,</span><span class=mspace  style="margin-right:0.1667em;"></span><span class="mord mathnormal">a</span><span class=mclose >)</span><span class=mspace  style="margin-right:0.2778em;"></span><span class=mrel >&gt;</span><span class=mspace  style="margin-right:0.2778em;"></span></span><span class=base ><span class=strut  style="height:1em;vertical-align:-0.25em;"></span><span class=mord >0</span><span class=mclose >]</span><span class=mspace  style="margin-right:1em;"></span><span class=mord ><span class="mord mathnormal" style="margin-right:0.02778em;">or</span></span><span class=mspace  style="margin-right:1em;"></span><span class="mord mathnormal" style="margin-right:0.10764em;">f</span><span class=mspace  style="margin-right:0.2778em;"></span><span class=mrel >=</span><span class=mspace  style="margin-right:0.2778em;"></span></span><span class=base ><span class=strut  style="height:0.938em;"></span><span class=mord ><span class="mord mathnormal">e</span><span class=msupsub ><span class=vlist-t ><span class=vlist-r ><span class=vlist  style="height:0.938em;"><span style="top:-3.113em;margin-right:0.05em;"><span class=pstrut  style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord mathnormal mtight">A</span><span class=msupsub ><span class="vlist-t vlist-t2"><span class=vlist-r ><span class=vlist  style="height:0.3448em;"><span style="top:-2.3488em;margin-left:0em;margin-right:0.0714em;"><span class=pstrut  style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mathnormal mtight" style="margin-right:0.02778em;">θ</span></span></span></span><span class=vlist-s >​</span></span><span class=vlist-r ><span class=vlist  style="height:0.1512em;"><span></span></span></span></span></span></span><span class="mopen mtight">(</span><span class="mord mathnormal mtight">s</span><span class="mpunct mtight">,</span><span class="mord mathnormal mtight">a</span><span class="mclose mtight">)</span><span class="mord mtight">/</span><span class="mord mathnormal mtight" style="margin-right:0.05278em;">β</span></span></span></span></span></span></span></span></span></span></span></span></span>
+<p>We implemented discrete CRR and continuous CRR &#40;<a href="https://juliareinforcementlearning.org/docs/rlzoo/#ReinforcementLearningZoo.CRRLearner">link</a>&#41;. The brief function parameters are as follows: </p>
+<pre><code class="julia hljs"><span class=hljs-keyword >mutable struct</span> CRRLearner{Aq, At, R} &lt;: AbstractLearner
+    <span class=hljs-comment >### Omit other parameters</span>
+    approximator::Aq <span class=hljs-comment ># Actor-Critic</span>
+    target_approximator::At <span class=hljs-comment ># Actor-Critic</span>
+    policy_improvement_mode::<span class=hljs-built_in >Symbol</span>
+    ratio_upper_bound::<span class=hljs-built_in >Float32</span>
+    beta::<span class=hljs-built_in >Float32</span>
+    advantage_estimator::<span class=hljs-built_in >Symbol</span>
+    m::<span class=hljs-built_in >Int</span>
+    continuous::<span class=hljs-built_in >Bool</span>
+<span class=hljs-keyword >end</span></code></pre>
+<p>In CRR, we use the Actor-Critic structure. In the case of discrete action space, the Critic is modeled as <span class=katex ><span class=katex-mathml ><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>Q</mi><mo stretchy=false >(</mo><mi>s</mi><mo separator=true >,</mo><mo>⋅</mo><mo stretchy=false >)</mo></mrow><annotation encoding="application/x-tex">Q(s,\cdot)</annotation></semantics></math></span><span class=katex-html  aria-hidden=true ><span class=base ><span class=strut  style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">Q</span><span class=mopen >(</span><span class="mord mathnormal">s</span><span class=mpunct >,</span><span class=mspace  style="margin-right:0.1667em;"></span><span class=mord >⋅</span><span class=mclose >)</span></span></span></span>, and the Actor is modeled as <span class=katex ><span class=katex-mathml ><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>L</mi><mo stretchy=false >(</mo><mi>s</mi><mo separator=true >,</mo><mo>⋅</mo><mo stretchy=false >)</mo></mrow><annotation encoding="application/x-tex">L(s,\cdot)</annotation></semantics></math></span><span class=katex-html  aria-hidden=true ><span class=base ><span class=strut  style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">L</span><span class=mopen >(</span><span class="mord mathnormal">s</span><span class=mpunct >,</span><span class=mspace  style="margin-right:0.1667em;"></span><span class=mord >⋅</span><span class=mclose >)</span></span></span></span> &#40;likelihood of the state&#41;. In the case of continuous action space, we use <span class=katex ><span class=katex-mathml ><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>Q</mi><mo stretchy=false >(</mo><mi>s</mi><mo separator=true >,</mo><mi>a</mi><mo stretchy=false >)</mo></mrow><annotation encoding="application/x-tex">Q(s, a)</annotation></semantics></math></span><span class=katex-html  aria-hidden=true ><span class=base ><span class=strut  style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">Q</span><span class=mopen >(</span><span class="mord mathnormal">s</span><span class=mpunct >,</span><span class=mspace  style="margin-right:0.1667em;"></span><span class="mord mathnormal">a</span><span class=mclose >)</span></span></span></span> to model the Critic, and use gaussian network to model the Actor.</p>
+<p>Parameter <code>continuous</code> stands for the type of action space. <code>policy_improvement_mode</code> is the type of the weight function <span class=katex ><span class=katex-mathml ><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>f</mi></mrow><annotation encoding="application/x-tex">f</annotation></semantics></math></span><span class=katex-html  aria-hidden=true ><span class=base ><span class=strut  style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.10764em;">f</span></span></span></span>. If <code>policy_improvement_mode&#61;:binary</code>, we use the first <span class=katex ><span class=katex-mathml ><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>f</mi></mrow><annotation encoding="application/x-tex">f</annotation></semantics></math></span><span class=katex-html  aria-hidden=true ><span class=base ><span class=strut  style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.10764em;">f</span></span></span></span> function. Otherwise, we use the second <span class=katex ><span class=katex-mathml ><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>f</mi></mrow><annotation encoding="application/x-tex">f</annotation></semantics></math></span><span class=katex-html  aria-hidden=true ><span class=base ><span class=strut  style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.10764em;">f</span></span></span></span> function, which needs parameter <code>ratio_upper_bound</code> &#40;Upper bound of <span class=katex ><span class=katex-mathml ><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>f</mi></mrow><annotation encoding="application/x-tex">f</annotation></semantics></math></span><span class=katex-html  aria-hidden=true ><span class=base ><span class=strut  style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.10764em;">f</span></span></span></span> value&#41; and <code>beta</code>. Besides, we provide two methods to estimate advantage function, specifing <code>advantage_estimator&#61;:mean/:max</code>. In the discrete case, we can calculate <span class=katex ><span class=katex-mathml ><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><mo stretchy=false >(</mo><mi>s</mi><mo separator=true >,</mo><mi>a</mi><mo stretchy=false >)</mo></mrow><annotation encoding="application/x-tex">A(s,a)</annotation></semantics></math></span><span class=katex-html  aria-hidden=true ><span class=base ><span class=strut  style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">A</span><span class=mopen >(</span><span class="mord mathnormal">s</span><span class=mpunct >,</span><span class=mspace  style="margin-right:0.1667em;"></span><span class="mord mathnormal">a</span><span class=mclose >)</span></span></span></span> directly. In the continuous case, we need to sample <code>m</code> Q-values to calculate advantage function.</p>
+<p>Different action spaces will also affect the implementation of the Actor-Critic. In the discrete case, the Actor outputs logits of all actions in a given state. Gaussian networks are used to model the Actor in the continuous case.</p>
+<p>Performance curve of discrete CRR algorithm in CartPole:</p>
+<figure class="l-body text-center">
+    <img src="/blog/phase1_technical_report_of_enriching_offline_reinforcement_learning_algorithms_in_reinforcement_learning_jl/JuliaRL_CRR_CartPole.png">
+    <figcaption></figcaption>
+</figure>
+
+<p>Performance curve of continuous CRR algorithm in Pendulum:</p>
+<figure class="l-body text-center">
+    <img src="/blog/phase1_technical_report_of_enriching_offline_reinforcement_learning_algorithms_in_reinforcement_learning_jl/JuliaRL_CRR_Pendulum.png">
+    <figcaption></figcaption>
+</figure>
+
+<h5 id=policy_in_the_latent_action_space_plas ><a href="#policy_in_the_latent_action_space_plas" class=header-anchor >Policy in the Latent Action Space &#40;PLAS&#41;</a></h5>
+<p>PLAS<d-cite key="DBLP:journals/corr/abs-2011-07213"></d-cite> is a policy constrain method suitable for continuous control tasks. Unlike BCQ and BEAR, PLAS implicitly constrains the policy to output actions within the support of the behavior policy through the latent action space:</p>
+<figure class="l-body text-center">
+    <img src="/blog/phase1_technical_report_of_enriching_offline_reinforcement_learning_algorithms_in_reinforcement_learning_jl/PLAS1.png">
+    <figcaption></figcaption>
+</figure>
+
+<p>PLAS pre-trains a CVAE &#40;Conditional Variational Auto-Encoder&#41; to constrain policy. In the pre-training phase, PLAS samples state-action pairs to train CVAE. PLAS needs to learn a deterministic policy mapping state to latent action and then uses CVAE mapping latent action to action in the training phase. When PLAS mapping state or latent action, it needs to use <code>tanh</code> function to limit the output range. </p>
+<p>The advantage of pre-training VAE is that it can accelerate the convergence, and it is easier to train when encountered with complex action spaces and import existing VAE models. Its pseudocode is as follows:</p>
+<figure class="l-body text-center">
+    <img src="/blog/phase1_technical_report_of_enriching_offline_reinforcement_learning_algorithms_in_reinforcement_learning_jl/PLAS2.png">
+    <figcaption></figcaption>
+</figure>
+
+<p>Please refer to this link for specific code &#40;<a href="https://juliareinforcementlearning.org/docs/rlzoo/#ReinforcementLearningZoo.PLASLearner-Tuple&#123;&#125;">link</a>&#41;. The brief function parameters are as follows:</p>
+<pre><code class="julia hljs"><span class=hljs-keyword >mutable struct</span> PLASLearner{BA1, BA2, BC1, BC2, V, R} &lt;: AbstractLearner
+    <span class=hljs-comment >### Omit other parameters</span>
+    policy::BA1
+    target_policy::BA2
+    qnetwork1::BC1
+    qnetwork2::BC2
+    target_qnetwork1::BC1
+    target_qnetwork2::BC2
+    vae::V
+    λ::<span class=hljs-built_in >Float32</span>
+    pretrain_step::<span class=hljs-built_in >Int</span>
+<span class=hljs-keyword >end</span></code></pre>
+<p>In PLAS, Q-network is modeled as <span class=katex ><span class=katex-mathml ><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>Q</mi><mo stretchy=false >(</mo><mi>s</mi><mo separator=true >,</mo><mi>a</mi><mo stretchy=false >)</mo></mrow><annotation encoding="application/x-tex">Q(s, a)</annotation></semantics></math></span><span class=katex-html  aria-hidden=true ><span class=base ><span class=strut  style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">Q</span><span class=mopen >(</span><span class="mord mathnormal">s</span><span class=mpunct >,</span><span class=mspace  style="margin-right:0.1667em;"></span><span class="mord mathnormal">a</span><span class=mclose >)</span></span></span></span> and policy is modeled as deterministic policy: <span class=katex ><span class=katex-mathml ><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>π</mi><mo stretchy=false >(</mo><mi>s</mi><mo stretchy=false >)</mo><mo>→</mo><msub><mi>a</mi><mrow><mi>l</mi><mi>a</mi><mi>t</mi><mi>e</mi><mi>n</mi><mi>t</mi></mrow></msub></mrow><annotation encoding="application/x-tex">\pi(s)\rightarrow a_{latent}</annotation></semantics></math></span><span class=katex-html  aria-hidden=true ><span class=base ><span class=strut  style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">π</span><span class=mopen >(</span><span class="mord mathnormal">s</span><span class=mclose >)</span><span class=mspace  style="margin-right:0.2778em;"></span><span class=mrel >→</span><span class=mspace  style="margin-right:0.2778em;"></span></span><span class=base ><span class=strut  style="height:0.5806em;vertical-align:-0.15em;"></span><span class=mord ><span class="mord mathnormal">a</span><span class=msupsub ><span class="vlist-t vlist-t2"><span class=vlist-r ><span class=vlist  style="height:0.3361em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class=pstrut  style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.01968em;">l</span><span class="mord mathnormal mtight">a</span><span class="mord mathnormal mtight">t</span><span class="mord mathnormal mtight">e</span><span class="mord mathnormal mtight">n</span><span class="mord mathnormal mtight">t</span></span></span></span></span><span class=vlist-s >​</span></span><span class=vlist-r ><span class=vlist  style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>. </p>
+<p>If the algorithm requires pre-training, please specify the parameter <code>pretrain_step</code> and function <code>update&#33;</code>. We modified the run function and added an interface:</p>
+<pre><code class="julia hljs"><span class=hljs-keyword >function</span> (agent::Agent)(stage::PreExperimentStage, env::AbstractEnv)
+    update!(agent.policy, agent.trajectory, env, stage)
+<span class=hljs-keyword >end</span>
+
+<span class=hljs-keyword >function</span> RLBase.update!(p::OfflinePolicy, traj::AbstractTrajectory, ::AbstractEnv, ::PreExperimentStage)
+    l = p.learner
+    <span class=hljs-keyword >if</span> <span class=hljs-keyword >in</span>(:pretrain_step, fieldnames(typeof(l)))
+        println(<span class=hljs-string >&quot;Pretrain...&quot;</span>)
+        <span class=hljs-keyword >for</span> _ <span class=hljs-keyword >in</span> <span class=hljs-number >1</span>:l.pretrain_step
+            inds, batch = sample(l.rng, p.dataset, p.batchsize)
+            update!(l, batch)
+        <span class=hljs-keyword >end</span>
+    <span class=hljs-keyword >end</span>
+<span class=hljs-keyword >end</span></code></pre>
+<p>In PLAS, we use conditional statements to select training components:</p>
+<pre><code class="julia hljs"><span class=hljs-keyword >function</span> RLBase.update!(l::PLASLearner, batch::<span class=hljs-built_in >NamedTuple</span>{SARTS})
+    <span class=hljs-keyword >if</span> l.update_step == <span class=hljs-number >0</span>
+        update_vae!(l, batch)
+    <span class=hljs-keyword >else</span>
+        update_learner!(l, batch)
+    <span class=hljs-keyword >end</span>
+<span class=hljs-keyword >end</span></code></pre>
+<p><code>λ</code> is the parameter of clipped double Q-learning &#40;used for Critic training&#41;, a small trick to reduce overestimation. Actor training uses the standard policy gradient method.</p>
+<p>Performance curve of PLAS algorithm in Pendulum &#40;<code>pertrain_step&#61;1000</code>&#41;: <figure class="l-body text-center">
+    <img src="/blog/phase1_technical_report_of_enriching_offline_reinforcement_learning_algorithms_in_reinforcement_learning_jl/JuliaRL_PLAS_Pendulum.png">
+    <figcaption></figcaption>
+</figure>
+</p>
+<p>However, the action perturbation component in PLAS has not yet been completed and needs to be implemented in the second stage.</p>
+<h4 id=other_work ><a href="#other_work" class=header-anchor >Other Work</a></h4>
+<p>In addition to the above work, we also did the following:</p>
+<ul>
+<li><p>Add <code>copyto</code> function in <code>ActorCritic</code>. This function is needed to synchronize between target Actor-Critic and online Actor-Critic.</p>
+
+<li><p>Add the tuning entropy component in SAC to improve performance.</p>
+
+</ul>
+<h4 id=conclusion ><a href="#conclusion" class=header-anchor >Conclusion</a></h4>
+<p>During this process, we learn a lot:</p>
+<ul>
+<li><p>Algorithm level. We researched more than a dozen top conference papers on offline reinforcement learning regions to implement more modern offline RL algorithms. Therefore, we understand the core problem of offline RL and how to solve the problem, as well as the shortcomings of the current method. This is of great benefit to our future research and work.</p>
+
+<li><p>Code level. Implementing these algorithms allowed us to increase the code and debug capabilities in Julia programming. Besides, we learned a lot of knowledge about code specifications, version management, and git usage. These experiences can be of great help to future development.</p>
+
+<li><p>Cooperation level. We must cooperate with everyone, including the mentor and other developers, to contribute to a public algorithm library. The ideas of the collaborators will give us a lot of inspiration.</p>
+
+</ul>
+<h2 id=future_plan ><a href="#future_plan" class=header-anchor >Future Plan</a></h2>
+<p>The following is our future plan:</p>
+<table><tr><th align=center >Date<th align=center >Work<tr><td align=center >August16 - August23<td align=center >Debug and finish CRR and PLAS.<tr><td align=center >August24 - August31<td align=center >Read the paper and python code of UWAC.<tr><td align=center >September1 - September7<td align=center >Implement and experiment UWAC.<tr><td align=center >September8 - September15<td align=center >Read the paper and python code of FisherBRC.<tr><td align=center >September16 - September23<td align=center >Implement and experiment FisherBRC.<tr><td align=center >September24 - September30<td align=center >Write build-in documentation and technical report. Buffer for unexpected delay.<tr><td align=center >After project<td align=center >Carry on fixing issues and maintain implemented algorithms.</table>
+<p>Firstly, we need to fix bugs in continuous CRR and finish action perturbation component in PLAS. The current progress is slightly faster than the originally set progress, so we can implement more of the modern offline RL algorithms. The current plan includes UWAC<d-cite key="DBLP:conf/icml/0001ZSSZSG21"></d-cite> and FisherBRC<d-cite key="DBLP:conf/icml/KostrikovFTN21"></d-cite> published on ICML&#39;21. Here we briefly introduce these two algorithms:</p>
+<ul>
+<li><p>Uncertainty Weighted Actor-Critic &#40;UWAC&#41;. The algorithm is based on the improvement of BEAR<d-cite key="DBLP:conf/nips/KumarFSTL19"></d-cite>. The authors adopt a practical and effective dropout-based uncertainty estimation method, Monte Carlo &#40;MC&#41; dropout, to identify and ignore OOD training samples, to introduce very little overhead over existing RL algorithms.</p>
+
+<li><p>Fisher Behavior Regularized Critic &#40;Fisher-BRC&#41;. The algorithm is based on the improvement of BRAC<d-cite key="DBLP:journals/corr/abs-1911-11361"></d-cite>. The authors propose an approach to parameterize the critic as the log-behavior-policy, which generated the offline data, plus a state-action value offset term. Behavior regularization then corresponds to an appropriate regularizer on the offset term. They propose using the Fisher divergence regularization for the offset term.</p>
+
+</ul>
+<p>In this way, the implemented algorithms basically include the mainstream of the policy constraint methods in offline reinforcement learning &#40;including distribution matching, support constrain, implicit constraint, behavior cloning&#41;.</p>
+
+<div></div></d-article>
+          
+
+    
+        
+
+
+
+    
+    
+        
+
+
+    
+
+    <d-appendix>
+    <h3>Corrections</h3>
+<p>If you see mistakes or want to suggest changes, please <a href="https://github.com/JuliaReinforcementLearning/ReinforcementLearning.jl/issues">create an issue</a> in the source repository.</p>
+
+    <d-bibliography src="/blog/phase1_technical_report_of_enriching_offline_reinforcement_learning_algorithms_in_reinforcement_learning_jl/bibliography.bib"></d-bibliography>
+</d-appendix>
+
+    <div class="distill-site-nav distill-site-footer">
+      <div class=row >
+        <div class=col-md-3 ></div>
+        <div class=col-md-6 >
+          <p>This website is built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> of the
+          <a href="https://github.com/tlienart/DistillTemplate">DistillTemplate</a>
+          (licensed under <a href="https://github.com/distillpub/template/blob/master/LICENSE">Apache
+          License 2.0</a>) and <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a>.
+          The <a href="https://github.com/JuliaReinforcementLearning/ReinforcementLearning.jl">source
+          code</a> of this website is licensed under <a href="https://github.com/JuliaReinforcementLearning/JuliaReinforcementLearning.github.io/blob/master/LICENSE">MIT
+          License</a>. The <a href="https://github.com/JuliaReinforcementLearning">JuliaReinforcementLearning</a>
+          organization was first created by <a href="https://github.com/jbrea">Johanni Brea</a> and then
+          co-maintained by <a href="https://github.com/findmyway">Jun Tian</a>.
+          And we thank <a href="https://github.com/JuliaReinforcementLearning/ReinforcementLearning.jl#contributors-">all the contributors </a> .</p>
+        </div>
+        <div class=col-md-3 ></div>
+      </div>
+    </div>
