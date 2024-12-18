@@ -1,0 +1,625 @@
+<!doctype html> <html lang=en > <script async src="https://www.googletagmanager.com/gtag/js?id=UA-149861753-1"></script> <script> window.dataLayer = window.dataLayer || []; function gtag() { dataLayer.push(arguments); } gtag('js', new Date()); gtag('config', 'UA-149861753-1'); </script> <meta charset=utf-8 > <meta name=viewport  content="width=device-width, initial-scale=1, shrink-to-fit=no"> <link rel=icon  href="/assets/site/logo.svg"> <link rel=stylesheet  href="/libs/highlight/github.min.css"> <title>General Pipeline for Offline Reinforcement Learning Evaluation Report</title> <link rel=stylesheet  href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin=anonymous > <link href="/css/custom.css" rel=stylesheet > <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin=anonymous ></script> <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin=anonymous ></script> <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin=anonymous ></script> <script src="/libs/distill/template.v2.8.0.js"></script> <d-front-matter> <script id=distill-front-matter  type="text/json"> { "authors": [ { "author":"Prasidh Srikumar", "authorURL":"https://github.com/Mobius1D", "affiliation":"National Institute of Technology - Trichy", "affiliationURL":"https://www.nitt.edu/" } ], "publishedDate":"2021-09-30", "citationText":"Prasidh Srikumar, 2021" } </script> </d-front-matter> <nav class="navbar navbar-expand-lg navbar-dark fixed-top" style="background-color: #1fd1f9; background-image: linear-gradient(315deg, #1fd1f9 0%, #b621fe 74%); " id=mainNav > <div class=container > <button class=navbar-toggler  type=button  data-toggle=collapse  data-target="#navbarTogglerDemo01" aria-controls=navbarTogglerDemo01  aria-expanded=false  aria-label="Toggle navigation"> <span class=navbar-toggler-icon ></span> </button> <div class="collapse navbar-collapse" id=navbarTogglerDemo01 > <span class=navbar-brand > <a class=navbar-brand  href="/"> JuliaReinforcementLearning </a> </span> <ul class="navbar-nav ml-auto"> <!-- <li class=nav-item > <a class=nav-link  href="/get_started/">Get Started</a> --> <!-- <li class=nav-item > <a class=nav-link  href="/guide/">Guide</a> <li class=nav-item > <a class=nav-link  href="/contribute/">Contribute</a> --> <li class=nav-item > <a class=nav-link  href="/docs/">Doc</a> <li class=nav-item > <a class=nav-link  href="https://github.com/JuliaReinforcementLearning">Github</a> </ul> </div> </nav> <d-title><h1>General Pipeline for Offline Reinforcement Learning Evaluation Report</h1><p>This is a technical report of the Summer OSPP project <a href="https://summer.iscas.ac.cn/#/org/prodetail/210370741?lang&#61;en">Establish a General Pipeline for Offline Reinforcement Learning Evaluation</a> used for final term evaluation. It provides an overview of the work done during mid-term and the final evaluation phases.</p> </d-title> <d-byline></d-byline> <hr class=franklin-toc-separator > <d-article class=franklin-content > <h3 class=franklin-toc-header >Table of content</h3> <div class=franklin-toc ><ol><li><a href="#introduction">Introduction</a><ol><li><a href="#project_name">Project Name</a><li><a href="#background">Background</a><li><a href="#project_overview">Project Overview</a><ol><li><a href="#objectives">Objectives</a></ol><li><a href="#time_planning">Time Planning</a><li><a href="#datasets">Datasets</a><ol><li><a href="#documentation">Documentation</a></ol><li><a href="#installation_details">Installation details</a><li><a href="#d4rl">D4RL</a><li><a href="#d4rl-pybullet">d4rl-pybullet</a><li><a href="#google_research_atari_dqn_replay_datasets">Google Research Atari DQN Replay Datasets</a><li><a href="#rl_unplugged_atari_dataset">RL Unplugged Atari Dataset</a><li><a href="#relevant_commits_discussions_and_prs">Relevant commits, discussions and PRs</a><li><a href="#implementation_details_and_challenges_faced">Implementation Details and Challenges Faced</a><ol><li><a href="#implementation_details">Implementation details</a><ol><li><a href="#directory_structure">Directory Structure</a></ol></ol><li><a href="#d4rl_datasets_implementation">D4RL Datasets implementation</a><li><a href="#rl_unplugged_atari">RL Unplugged Atari</a></ol><li><a href="#technical_report_final_term_evaluation">Technical report &#40;final term evaluation&#41;</a><ol><li><a href="#summary">Summary</a><li><a href="#completed_work">Completed Work</a><ol><li><a href="#bsuite_datasets">Bsuite Datasets</a><ol><li><a href="#ring_buffer">Ring Buffer</a></ol></ol><li><a href="#implementation">Implementation</a><li><a href="#working">Working</a><li><a href="#dm_datasets">DM Datasets</a><ol><li><a href="#example_of_type_handling_used">Example of type handling used.</a></ol><li><a href="#usage">Usage</a><li><a href="#deep_ope">Deep OPE</a><ol><li><a href="#implementation__2">Implementation</a></ol><li><a href="#working__2">Working</a><li><a href="#fqe">FQE</a><ol><li><a href="#implementation__3">Implementation</a></ol><li><a href="#results">Results</a><ol><li><a href="#parameter_values">Parameter Values</a></ol><li><a href="#evaluation_results">Evaluation Results</a><li><a href="#actual_values">Actual Values</a><li><a href="#relevant_commits_and_prs">Relevant Commits and PRs</a><li><a href="#conclusion">Conclusion</a><ol><li><a href="#implications">Implications</a></ol><li><a href="#future_scope">Future Scope</a></ol></ol></div> </d-article> <hr class=franklin-toc-separator > <d-article class=franklin-content ><h1 id=introduction ><a href="#introduction" class=header-anchor >Introduction</a></h1> <h2 id=project_name ><a href="#project_name" class=header-anchor >Project Name</a></h2> <p>Establish a General Pipeline for Offline Reinforcement Learning Evaluation</p> <h2 id=background ><a href="#background" class=header-anchor >Background</a></h2> <p>In recent years, there have been several breakthroughs in the field of Reinforcement Learning with numerous practical applications where RL bots have been able to achieve superhuman performance. This is also reflected in the industry where several cutting edge solutions have been developed based on RL &#40;<a href="https://www.tesla.com/">Tesla Motors</a>, <a href="https://cloud.google.com/automl">AutoML</a>, <a href="https://deepmind.com/blog/article/deepmind-ai-reduces-google-data-centre-cooling-bill-40">DeepMind data center cooling solutions</a> just to name a few&#41;.</p> <p>One of the most prominent challenges in RL is the lack of reliable environments for training RL agents. <strong>Offline RL</strong> has played a pivotal role in solving this problem by removing the need for the agent to interact with the environment to improve its policy over time. This brings forth the problem of not having reliable tests to verify the performance of RL algorithms. Such tests are facilitated by standard datasets &#40;<a href="https://arxiv.org/abs/2006.13888">RL Unplugged</a><d-cite key="DBLP:journals/corr/abs-2006-13888"></d-cite>, <a href="https://arxiv.org/abs/2004.07219">D4RL</a><d-cite key="DBLP:journals/corr/abs-2004-07219"></d-cite> and <a href="https://arxiv.org/abs/1907.04543">An Optimistic Perspective on Offline Reinforcement Learning</a><d-cite key=agarwal2020optimistic ></d-cite>&#41; that are used to train Offline RL agents and benchmark against other algorithms and implementations. <a href="https://github.com/JuliaReinforcementLearning/ReinforcementLearning.jl/tree/main/src/ReinforcementLearningDatasets">ReinforcementLearningDatasets.jl</a> provides a simple solution to access various standard datasets that are available for Offline RL benchmarking across a variety of tasks.</p> <p>Another problem in Offline RL is Offline Model Selection. For this, there are numerous policies that are available in <a href="https://openreview.net/forum?id&#61;kWSeGEeHvF8">Benchmarks for Deep Off-Policy Evaluation</a><d-cite key="DBLP:journals/corr/abs-2103-16596"></d-cite>. ReinforcementLearningDatasets.jl will also help in loading policies that will aid in model selection in ReinforcementLearning.jl package.</p> <h2 id=project_overview ><a href="#project_overview" class=header-anchor >Project Overview</a></h2> <h3 id=objectives ><a href="#objectives" class=header-anchor >Objectives</a></h3> <p>Create a package called <strong>ReinforcementLearningDatasets.jl</strong> that would aid in loading various standard datasets and policies that are available. Currently supported datasets are:</p> <ul> <li><p><a href="https://github.com/rail-berkeley/d4rl">D4RL: Datasets for Deep Data-Driven Reinforcement Learning</a></p> <li><p><a href="https://github.com/google-research/batch_rl">An Optimistic Perspective on Offline Reinforcement Learning &#40;ICML, 2020&#41;</a></p> <li><p><a href="https://github.com/takuseno/d4rl-pybullet">d4rl-pybullet</a></p> <li><p><a href="https://github.com/deepmind/deepmind-research/tree/master/rl_unplugged">RL Unplugged: Benchmarks for Offline Reinforcement Learning</a></p> </ul> <p>Make standard policies in <a href="https://github.com/google-research/deep_ope">Benchmarks for Deep Off-Policy Evaluation</a> to be available in RLDatasets.jl.</p> <p>Implement an <strong>Off Policy Evaluation</strong> method and select between a number of standard policies for a particular task using RLDatasets.jl.</p> <p>The following are the future work that are possible in this project.</p> <ul> <li><p>Parallel loading and partial loading of datasets.</p> <li><p>Add support for <code>environments</code> that are not supported by GymEnvs -&gt; Flow and CARLA.</p> <li><p>Add support for datasets in Flow and CARLA envs.</p> <li><p>Add support for creating, storing and loading custom made datasets.</p> <li><p><code>test-train</code> split functionality for datasets.</p> <li><p>Cross validation and grid search.</p> <li><p>Enable features that make a particular algorithm based on the requirements of the env.</p> <li><p><code>evaluator</code> function that performs evaluation &#40;can be on policy or off policy&#41;</p> <li><p>Metrics as hooks. Refer <a href="https://d3rlpy.readthedocs.io/en/v0.90/references/metrics.html">Metrics</a></p> </ul> <p>Refer the following <a href="https://github.com/JuliaReinforcementLearning/ReinforcementLearning.jl/discussions/359">discussion</a> for more ideas.</p> <h3 id=time_planning ><a href="#time_planning" class=header-anchor >Time Planning</a></h3> <table><tr><th align=center >Date<th align=center >Goals<tr><td align=center >07/01 - 07/14<td align=center >Brainstorm various ideas that are possible for the implementation of RLDatasets.jl and finalize the key features.<tr><td align=center >07/15 - 07/20<td align=center >Made a basic julia wrapper for <code>d4rl</code> environments and add some tests<tr><td align=center >07/21 - 07/30<td align=center >Implemented <code>d4rl</code> and <code>d4rl-pybullet</code> datasets<tr><td align=center >07/31 - 08/06<td align=center >Implemented <code>Google Research DQN Replay Datasets</code><tr><td align=center >08/07 - 08/14<td align=center >Implemented <code>RL Unplugged atari datasets</code>, setup the docs, added README.md. Made the package more user friendly. Make the <strong>mid-term report</strong><tr><td align=center >08/15 - 08/30<td align=center >Added bsuite datasets, polished the interface, finalized the structure of the codebase. Fixed problem with windows<tr><td align=center >09/01 - 09/15<td align=center >Added support for policy loading from <a href="https://github.com/google-research/deep_ope">Benchmarks for Deep Off-Policy Evaluation</a><tr><td align=center >09/16 - 09/30<td align=center >Researched about OPE methods, implemented FQE and test basic performance. Completed the <strong>final-term report</strong></table> <p>There are some changes to the original timeline based on a few time constraints but the basic objectives of the project are accomplished.</p> <h2 id=datasets ><a href="#datasets" class=header-anchor >Datasets</a></h2> <h3 id=documentation ><a href="#documentation" class=header-anchor >Documentation</a></h3> <p>The documentation for this package is available in <a href="https://juliareinforcementlearning.org/docs/rldatasets/">RLDatasets.jl</a>. Do check it out for more details.</p> <h3 id=installation_details ><a href="#installation_details" class=header-anchor >Installation details</a></h3> <p>To install the <code>ReinforcementLearningDatasets.jl</code> package use the following command in julia&#39;s <code>pkg</code> mode.</p> <pre><code class="julia hljs">pkg&gt; add https://github.com/JuliaReinforcementLearning/ReinforcementLearning.jl:src/ReinforcementLearningDatasets</code></pre>
+<h3 id=d4rl ><a href="#d4rl" class=header-anchor >D4RL</a></h3>
+<p>Added support for D4RL datasets with all features loaded in the returned type.</p>
+<p>Credits: <a href="https://github.com/rail-berkeley/d4rl">D4RL</a></p>
+<pre><code class="julia hljs"><span class=hljs-keyword >using</span> ReinforcementLearningDatasets
+ds = dataset(
+        <span class=hljs-string >&quot;hopper-medium-replay-v0&quot;</span>;
+        repo=<span class=hljs-string >&quot;d4rl&quot;</span>)</code></pre>
+<p>The type &#40;<code>D4RLDataSet</code>&#41; returned by <code>dataset</code> is an <code>Iterator</code> that returns batches of data based on the requirement that is specified.</p>
+<p>Now, you could <code>take</code> the values of the <code>ds</code> or <code>iterate</code> over it.</p>
+<pre><code class="julia hljs">julia&gt; batches = Iterators.take(ds, <span class=hljs-number >2</span>)
+D4RLDataSet{StableRNGs.LehmerRNG}(<span class=hljs-built_in >Dict</span>{<span class=hljs-built_in >Symbol</span>, <span class=hljs-built_in >Any</span>}(:reward =&gt; <span class=hljs-built_in >Float32</span>[<span class=hljs-number >0.9236555</span>, <span class=hljs-number >0.8713692</span>, <span class=hljs-number >0.92237693</span>, <span class=hljs-number >0.9839225</span>, <span class=hljs-number >0.91540813</span>, <span class=hljs-number >0.8331875</span>, <span class=hljs-number >0.8102179</span>, <span class=hljs-number >0.78385466</span>, <span class=hljs-number >0.7304337</span>, <span class=hljs-number >0.6942671</span>  …  <span class=hljs-number >5.0350657</span>, <span class=hljs-number >5.005931</span>, <span class=hljs-number >4.998442</span>, <span class=hljs-number >4.986662</span>, <span class=hljs-number >4.9730926</span>, <span class=hljs-number >4.9638906</span>, <span class=hljs-number >4.9503803</span>, <span class=hljs-number >4.9326644</span>, <span class=hljs-number >4.8952913</span>, <span class=hljs-number >4.8448896</span>], :state =&gt; <span class=hljs-built_in >Float32</span>[<span class=hljs-number >1.2521756</span> <span class=hljs-number >1.2519351</span> … <span class=hljs-number >0.72994494</span> <span class=hljs-number >0.7145643</span>; <span class=hljs-number >0.00026937472</span> -<span class=hljs-number >0.0048946342</span> … <span class=hljs-number >0.13946348</span> <span class=hljs-number >0.15210924</span>; … ; <span class=hljs-number >0.002733759</span> -<span class=hljs-number >1.1853988</span> … -<span class=hljs-number >0.06101464</span> -<span class=hljs-number >0.045892276</span>; -<span class=hljs-number >0.0028058232</span> <span class=hljs-number >0.08466121</span> … -<span class=hljs-number >1.4235892</span> -<span class=hljs-number >1.0558393</span>], :action =&gt; <span class=hljs-built_in >Float32</span>[-<span class=hljs-number >0.67060924</span> -<span class=hljs-number >0.39061046</span> … -<span class=hljs-number >0.15234122</span> -<span class=hljs-number >0.1382414</span>; -<span class=hljs-number >0.9329903</span> <span class=hljs-number >0.65977097</span> … <span class=hljs-number >0.9518685</span> <span class=hljs-number >0.9666188</span>; <span class=hljs-number >0.010210991</span> -<span class=hljs-number >0.073685646</span> … <span class=hljs-number >0.24721281</span> -<span class=hljs-number >0.2440847</span>], :terminal =&gt; <span class=hljs-built_in >Int8</span>[<span class=hljs-number >0</span>, <span class=hljs-number >0</span>, <span class=hljs-number >0</span>, <span class=hljs-number >0</span>, <span class=hljs-number >0</span>, <span class=hljs-number >0</span>, <span class=hljs-number >0</span>, <span class=hljs-number >0</span>, <span class=hljs-number >0</span>, <span class=hljs-number >0</span>  …  <span class=hljs-number >0</span>, <span class=hljs-number >0</span>, <span class=hljs-number >0</span>, <span class=hljs-number >0</span>, <span class=hljs-number >0</span>, <span class=hljs-number >0</span>, <span class=hljs-number >0</span>, <span class=hljs-number >0</span>, <span class=hljs-number >0</span>, <span class=hljs-number >1</span>]), <span class=hljs-string >&quot;d4rl&quot;</span>, <span class=hljs-number >200919</span>, <span class=hljs-number >256</span>, (:state, :action, :reward, :terminal, :next_state), StableRNGs.LehmerRNG(state=<span class=hljs-number >0x000000000000000000000000000000f7</span>), <span class=hljs-built_in >Dict</span>{<span class=hljs-built_in >String</span>, <span class=hljs-built_in >Any</span>}(<span class=hljs-string >&quot;timeouts&quot;</span> =&gt; <span class=hljs-built_in >Int8</span>[<span class=hljs-number >0</span>, <span class=hljs-number >0</span>, <span class=hljs-number >0</span>, <span class=hljs-number >0</span>, <span class=hljs-number >0</span>, <span class=hljs-number >0</span>, <span class=hljs-number >0</span>, <span class=hljs-number >0</span>, <span class=hljs-number >0</span>, <span class=hljs-number >0</span>  …  <span class=hljs-number >0</span>, <span class=hljs-number >0</span>, <span class=hljs-number >0</span>, <span class=hljs-number >0</span>, <span class=hljs-number >0</span>, <span class=hljs-number >0</span>, <span class=hljs-number >0</span>, <span class=hljs-number >0</span>, <span class=hljs-number >0</span>, <span class=hljs-number >0</span>]), <span class=hljs-literal >true</span>)
+
+julia&gt; typeof(batches)
+Base.Iterators.Take{D4RLDataSet{StableRNGs.LehmerRNG}}
+
+julia&gt; batch = collect(batches)[<span class=hljs-number >1</span>]
+<span class=hljs-built_in >NamedTuple</span>{(:state, :action, :reward, :terminal, :next_state), <span class=hljs-built_in >Tuple</span>{<span class=hljs-built_in >Matrix</span>{<span class=hljs-built_in >Float32</span>}, <span class=hljs-built_in >Matrix</span>{<span class=hljs-built_in >Float32</span>}, <span class=hljs-built_in >Vector</span>{<span class=hljs-built_in >Float32</span>}, <span class=hljs-built_in >Vector</span>{<span class=hljs-built_in >Int8</span>}, <span class=hljs-built_in >Matrix</span>{<span class=hljs-built_in >Float32</span>}}}
+
+julia&gt; size(batch[:state])
+(<span class=hljs-number >11</span>, <span class=hljs-number >256</span>)</code></pre>
+<h3 id=d4rl-pybullet ><a href="#d4rl-pybullet" class=header-anchor >d4rl-pybullet</a></h3>
+<p>Added support for datasets released in <code>d4rl-pybullet</code>. This enables testing the agents in complex environments without <code>Mujoco</code> license.</p>
+<p>Credits: <a href="https://github.com/takuseno/d4rl-pybullet">d4rl-pybullet</a></p>
+<pre><code class="julia hljs"><span class=hljs-keyword >using</span> ReinforcementLearningDatasets
+ds = dataset(
+        <span class=hljs-string >&quot;hopper-bullet-mixed-v0&quot;</span>;
+        repo=<span class=hljs-string >&quot;d4rl-pybullet&quot;</span>,
+    )
+samples = Iterators.take(ds, <span class=hljs-number >2</span>)</code></pre>
+<p>The output is similar to D4RL.</p>
+<h3 id=google_research_atari_dqn_replay_datasets ><a href="#google_research_atari_dqn_replay_datasets" class=header-anchor >Google Research Atari DQN Replay Datasets</a></h3>
+<p>Added support for <code>Google Research Atari DQN Replay Datasets</code>. Currently, the datasets are directly loaded into the RAM and therefore, it is advised to be used only with sufficient amount of RAM &#40;around 20 GB of free space&#41;. Support for lazy parallel loading in a <code>Channel</code> will be given soon. </p>
+<p>Credits: <a href="https://github.com/google-research/batch_rl">DQN Replay Datasets</a></p>
+<pre><code class="julia hljs"><span class=hljs-keyword >using</span> ReinforcementLearningDatasets
+ds = dataset(
+        <span class=hljs-string >&quot;pong&quot;</span>,
+        <span class=hljs-number >1</span>,
+        [<span class=hljs-number >1</span>, <span class=hljs-number >2</span>]
+    )
+samples = Iterators.take(ds, <span class=hljs-number >2</span>)</code></pre>
+<p>The output is similar to D4RL.</p>
+<h3 id=rl_unplugged_atari_dataset ><a href="#rl_unplugged_atari_dataset" class=header-anchor >RL Unplugged Atari Dataset</a></h3>
+<p>Added support for <code>RL Unplugged</code> atari datasets. The datasets that are stored in the form of <code>.tfrecord</code> are fetched into julia. Lazy loading with multi threading is implemented. This implementation is based on previous work in <a href="https://github.com/JuliaReinforcementLearning/TFRecord.jl">TFRecord.jl</a>.</p>
+<p>Credits: <a href="https://github.com/deepmind/deepmind-research/tree/master/rl_unplugged">RL Unplugged</a></p>
+<pre><code class="julia hljs"><span class=hljs-keyword >using</span> ReinforcementLearningDatasets
+ds = ds = rl_unplugged_atari_dataset(
+        <span class=hljs-string >&quot;Pong&quot;</span>,
+        <span class=hljs-number >1</span>,
+        [<span class=hljs-number >1</span>, <span class=hljs-number >2</span>]
+    )</code></pre>
+<p>The type that is returned is a <code>Channel&#123;AtariRLTransition&#125;</code> which returns batches with the given specifications from the buffer when <code>take&#33;</code> is used. The point to be noted here is that it takes seconds to load the datasets into the <code>Channel</code> and the loading is highly customizable.</p>
+<pre><code class="julia hljs">julia&gt; ds = ds = rl_unplugged_atari_dataset(
+               <span class=hljs-string >&quot;Pong&quot;</span>,
+               <span class=hljs-number >1</span>,
+               [<span class=hljs-number >1</span>, <span class=hljs-number >2</span>]
+           )
+[ Info: Loading the shards [<span class=hljs-number >1</span>, <span class=hljs-number >2</span>] <span class=hljs-keyword >in</span> <span class=hljs-number >1</span> run of Pong with <span class=hljs-number >4</span> threads
+Progress: <span class=hljs-number >100</span>%|██████████████████████████████████████████████████████████████████████████████████████████████████████| Time: <span class=hljs-number >0</span>:<span class=hljs-number >00</span>:<span class=hljs-number >08</span>
+<span class=hljs-built_in >Channel</span>{ReinforcementLearningDatasets.AtariRLTransition}(<span class=hljs-number >12</span>) (<span class=hljs-number >12</span> items available)</code></pre>
+<p>It also supports lazy downloading of the datasets based on the <code>shards</code> that are required by the user. In this case only <code>gs://rl_unplugged/atari/Pong/atari_Pong_run_1-00001-of-00100</code> and <code>gs://rl_unplugged/atari/Pong/atari_Pong_run_1-00002-of-00100</code> will only be downloaded with permissions from the user. If it is already present the <code>dataset</code> is located using <code>DataDeps.jl</code>. </p>
+<p>The loading time for batches is also very minimal.</p>
+<pre><code class="julia hljs">julia&gt; <span class=hljs-meta >@time</span> batch = take!(ds)
+<span class=hljs-number >0.000011</span> seconds (<span class=hljs-number >1</span> allocation: <span class=hljs-number >80</span> bytes)
+
+julia&gt; typeof(batch)
+ReinforcementLearningDatasets.AtariRLTransition
+
+julia&gt; typeof(batch.state)
+<span class=hljs-built_in >Array</span>{<span class=hljs-built_in >UInt8</span>, <span class=hljs-number >4</span>}
+
+julia&gt; size(batch.state)
+(<span class=hljs-number >84</span>, <span class=hljs-number >84</span>, <span class=hljs-number >4</span>, <span class=hljs-number >256</span>)
+
+julia&gt; size(batch.reward)
+(<span class=hljs-number >256</span>,)</code></pre>
+<h2 id=relevant_commits_discussions_and_prs ><a href="#relevant_commits_discussions_and_prs" class=header-anchor >Relevant commits, discussions and PRs</a></h2>
+<ul>
+<li><p><a href="https://github.com/JuliaReinforcementLearning/ReinforcementLearning.jl/pull/403">Updated RLDatasets.jl #403</a></p>
+
+<li><p><a href="https://github.com/JuliaReinforcementLearning/ReinforcementLearning.jl/pull/416">Expand to d4rl-pybullet #416</a></p>
+
+<li><p><a href="https://github.com/JuliaReinforcementLearning/ReinforcementLearning.jl/pull/429">Add Atari datasets released by Google Research #429</a></p>
+
+<li><p><a href="https://github.com/JuliaReinforcementLearning/ReinforcementLearning.jl/pull/452">RL unplugged implementation with tests #452</a></p>
+
+<li><p><a href="https://github.com/JuliaReinforcementLearning/ReinforcementLearning.jl/discussions/359">Features for Offline Reinforcement Learning Pipeline #359</a></p>
+
+<li><p><a href="https://github.com/JuliaReinforcementLearning/TFRecord.jl/pull/24">Fix record_type issue #24</a></p>
+
+</ul>
+<h2 id=implementation_details_and_challenges_faced ><a href="#implementation_details_and_challenges_faced" class=header-anchor >Implementation Details and Challenges Faced</a></h2>
+<p>The challenge that was faced during the first week was to chart out a direction for RLDatasets.jl. I researched the implementations of the pipeline in <a href="https://github.com/takuseno/d3rlpy">d3rlpy</a>, <a href="https://www.tensorflow.org/datasets">TF.data.Dataset</a> etc and then narrowed down some inspiring ideas in the <a href="https://github.com/JuliaReinforcementLearning/ReinforcementLearning.jl/discussions/359">discussion</a>.</p>
+<p>Later, I made the <a href="https://github.com/JuliaReinforcementLearning/ReinforcementLearning.jl/pull/384">implementation</a> as a wrapper around d4rl python library, which was discarded as it did not align with the purpose of the library of being lightweight and not requiring a <code>Mujoco license</code> for usage of open source datasets. A wrapper would also not give the fine grained control that we could get if we load the datasets natively.</p>
+<p>We decided to use <a href="https://github.com/oxinabox/DataDeps.jl">DataDeps.jl</a> for registering, tracking and locating datasets without any hassle. <a href="https://github.com/JuliaComputing/DataSets.jl">DataDeps.jl</a> is a package that helps make data wrangling code more reusable and was crucial in making RLDatasets.jl seamless.</p>
+<p>What I learnt here was how to make a package, manage its dependencies and choose which package would be the right fit for the job. I also learnt about <code>Iterator</code> interfaces in julia to convert the type &#40;that is output by the <code>dataset</code> function&#41; into an <code>Iterator</code>. <code>d4rl-pybullet</code> was also implemented in a similar fashion.</p>
+<p>Implementation of <code>Google Research Atari DQN Replay Datasets</code> was harder because it was quite a large dataset and even one shard didn&#39;t fit into memory of my machine. I also had to figure out how the data was stored and how to retrieve it. Initially, I planned to use <code>GZip.jl</code> to unpack the gzip files and use <code>NPZ.jl</code> to read the files. Since, NPZ didn&#39;t support reading from <code>GZipStream</code> by itself, I had to adapt the functions in <code>NPZ</code> to read the stream. Later, we decided to use <code>CodecZlib</code> to get a decompressed buffer channel output which was natively supported by <code>NPZ</code>. We also had to test it internally and skip the CI test because CI wouldn&#39;t be able to handle the dataset. Exploring the possibility of lazy loading of the files that are available and enabling it is also within the scope of the project.</p>
+<p>For supporting <code>RL Unplugged dataset</code> I had to learn about <code>.tfrecord</code> files, <code>Protocol Buffers</code>, <code>buffered Channels</code> and julia <code>multi threading</code> which was used in a lot of occasions. It took some time to grasp all the concepts but the final implementation, however, was based on already existing work in <code>TFRecord.jl</code>.</p>
+<p>All of this work wouldn&#39;t have been possible without the patient mentoring and vast knowledge of my mentor <a href="https://github.com/findmyway">Jun Tian</a>, who has been pivotal in the design and implementation of the package. His massive experience and beautifully written code has provided a lot of inspiration to the making of this package. His amicable nature and commitment to the users of the package by providing timely and detailed explanations to any issues or queries related to the package despite his time constraints, has provided a long standing example as a developer and as a person. I also thank all the developers of the packages that <code>RLDatasets.jl</code> depends upon.</p>
+<h3 id=implementation_details ><a href="#implementation_details" class=header-anchor >Implementation details</a></h3>
+<h4 id=directory_structure ><a href="#directory_structure" class=header-anchor >Directory Structure</a></h4>
+<p>The <code>src</code> directory hosts the working logic of the package.</p>
+<pre><code class="julia hljs">src
+├─ ReinforcementLearningDatasets.jl
+├─ atari
+│  ├─ atari_dataset.jl
+│  └─ register.jl
+├─ common.jl
+├─ d4rl
+│  ├─ d4rl
+│  │  └─ register.jl
+│  ├─ d4rl_dataset.jl
+│  └─ d4rl_pybullet
+│     └─ register.jl
+├─ init.jl
+└─ rl_unplugged
+   ├─ atari
+   │  ├─ register.jl
+   │  └─ rl_unplugged_atari.jl
+   └─ util.jl</code></pre>
+<p>The directory for handling each dataset would consist of two files. The <code>register.jl</code> that would register the <code>DataDeps</code> that are required and another file that is responsible for loading the datasets. The <code>init</code> functions are called in the project <code>__init__</code> for registering right after it is imported.</p>
+<pre><code class="julia hljs"><span class=hljs-keyword >function</span> __init__()
+    RLDatasets.d4rl_init()
+    RLDatasets.d4rl_pybullet_init()
+    RLDatasets.atari_init()
+    RLDatasets.rl_unplugged_atari_init()
+<span class=hljs-keyword >end</span></code></pre>
+<h4 id=d4rl_datasets_implementation ><a href="#d4rl_datasets_implementation" class=header-anchor >D4RL Datasets implementation</a></h4>
+<p>The <code>register.jl</code> for d4rl dataset is located in <code>src/d4rl/d4rl</code> which registers the <code>DataDeps</code>. The following is an example code for the registration.</p>
+<pre><code class="julia hljs"><span class=hljs-keyword >function</span> d4rl_init()
+    repo = <span class=hljs-string >&quot;d4rl&quot;</span>
+    <span class=hljs-keyword >for</span> ds <span class=hljs-keyword >in</span> keys(D4RL_DATASET_URLS)
+        register(
+            DataDep(
+                repo*<span class=hljs-string >&quot;-&quot;</span>* ds,
+                <span class=hljs-string >&quot;&quot;&quot;
+                Credits: https://arxiv.org/abs/2004.07219
+                The following dataset is fetched from the d4rl. 
+                The dataset is fetched and modified in a form that is useful for RL.jl package.
+                
+                Dataset information: 
+                Name: <span class=hljs-subst >$(ds)</span>
+                <span class=hljs-subst >$(<span class=hljs-keyword >if</span> ds <span class=hljs-keyword >in</span> keys(D4RL_REF_MAX_SCORE)</span> &quot;MAXIMUM_SCORE: &quot; * string(D4RL_REF_MAX_SCORE[ds]) end)
+                <span class=hljs-subst >$(<span class=hljs-keyword >if</span> ds <span class=hljs-keyword >in</span> keys(D4RL_REF_MIN_SCORE)</span> &quot;MINIMUM_SCORE: &quot; * string(D4RL_REF_MIN_SCORE[ds]) end) 
+                &quot;&quot;&quot;</span>, <span class=hljs-comment >#check if the MAX and MIN score part is even necessary and make the log file prettier</span>
+                D4RL_DATASET_URLS[ds],
+            )
+        )
+    <span class=hljs-keyword >end</span>
+    <span class=hljs-literal >nothing</span>
+<span class=hljs-keyword >end</span></code></pre>
+<p>The dataset is loaded using <code>ReinforcementLearningDatasets/src/d4rl/d4rl_dataset.jl</code> and is enclosed in a <code>D4RLDataSet</code> type.</p>
+<pre><code class="julia hljs"><span class=hljs-keyword >struct</span> D4RLDataSet{T&lt;:AbstractRNG} &lt;: RLDataSet
+    dataset::<span class=hljs-built_in >Dict</span>{<span class=hljs-built_in >Symbol</span>, <span class=hljs-built_in >Any</span>}
+    repo::<span class=hljs-built_in >String</span>
+    dataset_size::<span class=hljs-built_in >Integer</span>
+    batchsize::<span class=hljs-built_in >Integer</span>
+    style::<span class=hljs-built_in >Tuple</span>
+    rng::T
+    meta::<span class=hljs-built_in >Dict</span>
+    is_shuffle::<span class=hljs-built_in >Bool</span>
+<span class=hljs-keyword >end</span></code></pre>
+<p>The dataset function is used to retrieve the files.</p>
+<pre><code class="julia hljs"><span class=hljs-keyword >function</span> dataset(dataset::<span class=hljs-built_in >String</span>;
+    style=SARTS,
+    repo = <span class=hljs-string >&quot;d4rl&quot;</span>,
+    rng = StableRNG(<span class=hljs-number >123</span>), 
+    is_shuffle = <span class=hljs-literal >true</span>, 
+    batchsize=<span class=hljs-number >256</span>
+)</code></pre>
+<p>The dataset is downloaded if the dataset is not present and loaded from the local file system using <code>DataDeps.jl</code> </p>
+<pre><code class="julia hljs"><span class=hljs-keyword >try</span> 
+    <span class=hljs-meta >@datadep_str</span> repo*<span class=hljs-string >&quot;-&quot;</span>*dataset 
+<span class=hljs-keyword >catch</span> 
+    throw(<span class=hljs-string >&quot;The provided dataset is not available&quot;</span>) 
+<span class=hljs-keyword >end</span>
+    
+path = <span class=hljs-meta >@datadep_str</span> repo*<span class=hljs-string >&quot;-&quot;</span>*dataset 
+
+<span class=hljs-meta >@assert</span> length(readdir(path)) == <span class=hljs-number >1</span>
+file_name = readdir(path)[<span class=hljs-number >1</span>]
+
+data = h5open(path*<span class=hljs-string >&quot;/&quot;</span>*file_name, <span class=hljs-string >&quot;r&quot;</span>) <span class=hljs-keyword >do</span> file
+    read(file)
+<span class=hljs-keyword >end</span></code></pre>
+<p>The dataset is loaded into <code>D4RLDataSet</code> <code>Iterator</code> and returned. The iteration logic is also implemented in the same file using <code>Iterator</code> interfaces.</p>
+<h4 id=rl_unplugged_atari ><a href="#rl_unplugged_atari" class=header-anchor >RL Unplugged Atari</a></h4>
+<p>Some of the interesting pieces of code used in loading RL Unplugged dataset.</p>
+<p>Multi threaded iteration over a <code>Channel&#123;Example&#125;</code> to <code>put&#33;</code> into another <code>Channel&#123;AtariRLTransition&#125;</code>.</p>
+<pre><code class="julia hljs">ch_src = <span class=hljs-built_in >Channel</span>{AtariRLTransition}(n * tf_reader_sz) <span class=hljs-keyword >do</span> ch
+    <span class=hljs-keyword >for</span> fs <span class=hljs-keyword >in</span> partition(shuffled_files, n)
+        Threads.foreach(
+            TFRecord.read(
+                fs;
+                compression=:gzip,
+                bufsize=tf_reader_bufsize,
+                channel_size=tf_reader_sz,
+            );
+            schedule=Threads.StaticSchedule()
+        ) <span class=hljs-keyword >do</span> x
+            put!(ch, AtariRLTransition(x))
+        <span class=hljs-keyword >end</span>
+    <span class=hljs-keyword >end</span>
+<span class=hljs-keyword >end</span></code></pre>
+<p>Multi threaded batching using a parallel loop where each thread loads the batches into <code>Channel&#123;AtariRLTransition&#125;</code>.</p>
+<pre><code class="julia hljs">res = <span class=hljs-built_in >Channel</span>{AtariRLTransition}(n_preallocations; taskref=taskref, spawn=<span class=hljs-literal >true</span>) <span class=hljs-keyword >do</span> ch
+    Threads.<span class=hljs-meta >@threads</span> <span class=hljs-keyword >for</span> i <span class=hljs-keyword >in</span> <span class=hljs-number >1</span>:batchsize
+        put!(ch, deepcopy(batch(buffer_template, popfirst!(transitions), i)))
+    <span class=hljs-keyword >end</span>
+<span class=hljs-keyword >end</span></code></pre>
+<h1 id=technical_report_final_term_evaluation ><a href="#technical_report_final_term_evaluation" class=header-anchor >Technical report &#40;final term evaluation&#41;</a></h1>
+<p>The following is the final term evaluation report of &quot;General Pipeline for Offline Reinforcement Learning Evaluation Report&quot; in OSPP. Details of all the work that has been done after the mid-term evaluation and some explanation on the current status of the package are given. Some exciting work that is possible based on this project is also given.</p>
+<h2 id=summary ><a href="#summary" class=header-anchor >Summary</a></h2>
+<ul>
+<li><p>Polished and finalized the structure of the package. Improved usability by updating the <a href="https://juliareinforcementlearning.org/docs/rldatasets/">docs</a> accordingly.</p>
+
+<li><p>Fixed the <code>run</code> error that was shown in windows.</p>
+
+<li><p>Added <code>Bsuite</code> and all <code>DM</code> environments including <a href="https://github.com/deepmind/deepmind-research/tree/master/rl_unplugged#deepmind-control-suite-dataset"><code>DeepMind Control Suite Dataset</code></a>, <a href="https://github.com/deepmind/deepmind-research/tree/master/rl_unplugged#deepmind-lab-dataset"><code>DeepMind Lab Dataset</code></a> and <a href="https://github.com/deepmind/deepmind-research/tree/master/rl_unplugged#deepmind-locomotion-dataset_"><code>DeepMind Locomotion Dataset</code></a> in RL Unplugged Datasets<d-cite key="DBLP:journals/corr/abs-2006-13888"></d-cite>.</p>
+
+<li><p>Added <a href="https://github.com/google-research/deep_ope">Deep OPE</a><d-cite key="DBLP:journals/corr/abs-2103-16596"></d-cite> models for D4RL datasets.</p>
+
+<li><p>Researched and implemented FQE<d-cite key="DBLP:journals/corr/abs-2007-09055"></d-cite> for which the basic implementation works but there are some flaws that need to be fixed.</p>
+
+</ul>
+<h2 id=completed_work ><a href="#completed_work" class=header-anchor >Completed Work</a></h2>
+<p>The following work has been done post mid-term evaluation.</p>
+<h3 id=bsuite_datasets ><a href="#bsuite_datasets" class=header-anchor >Bsuite Datasets</a></h3>
+<p>It involved work similar to RL Unplugged Atari Datasets which involves multi threaded dataloading. It is implemented using a <a href="https://github.com/JuliaReinforcementLearning/ReinforcementLearning.jl/blob/f1837a93c4c061925d92167c3480a423007dae5c/src/ReinforcementLearningDatasets/src/rl_unplugged/util.jl#L89"><code>Ring Buffer</code></a> for storing and loading batches of data.</p>
+<h4 id=ring_buffer ><a href="#ring_buffer" class=header-anchor >Ring Buffer</a></h4>
+<p>Huge thanks to <a href="https://github.com/findmyway">Jun Tian</a> for the implementation.</p>
+<p>The RingBuffer is based on having two <code>Channel</code>s, one for holding the buffer that contains empty batches &#40;<code>buffers</code>&#41; that can be used later for making batches with data. The <code>results</code> <code>Channel</code> is used for holding batches with data. The <code>current</code> holds the latest result.</p>
+<pre><code class="julia hljs"><span class=hljs-keyword >mutable struct</span> RingBuffer{T} &lt;: <span class=hljs-built_in >AbstractChannel</span>{T}
+    buffers::<span class=hljs-built_in >Channel</span>{T}
+    current::T
+    results::<span class=hljs-built_in >Channel</span>{T}
+<span class=hljs-keyword >end</span></code></pre>
+<p>The <code>RingBuffer</code> is created using the following code. It creates an empty <code>buffers</code> <code>Channel</code> that is then used to fill up <code>results</code> by performing inplace operations for making batches with data.</p>
+<pre><code class="julia hljs"><span class=hljs-keyword >function</span> RingBuffer(f!, buffer::T;sz=Threads.nthreads(), taskref=<span class=hljs-literal >nothing</span>) <span class=hljs-keyword >where</span> T
+    buffers = <span class=hljs-built_in >Channel</span>{T}(sz)
+    <span class=hljs-keyword >for</span> _ <span class=hljs-keyword >in</span> <span class=hljs-number >1</span>:sz
+        put!(buffers, deepcopy(buffer))
+    <span class=hljs-keyword >end</span>
+    results = <span class=hljs-built_in >Channel</span>{T}(sz, spawn=<span class=hljs-literal >true</span>, taskref=taskref) <span class=hljs-keyword >do</span> ch
+        Threads.foreach(buffers;schedule=Threads.StaticSchedule()) <span class=hljs-keyword >do</span> x
+        <span class=hljs-comment ># for x in buffers</span>
+            f!(x)  <span class=hljs-comment ># in-place operation</span>
+            put!(ch, x)
+        <span class=hljs-keyword >end</span>
+    <span class=hljs-keyword >end</span>
+    RingBuffer(buffers, buffer, results)
+<span class=hljs-keyword >end</span></code></pre>
+<p>Whenever a batch is taken from the buffer, the following code gets called.</p>
+<pre><code class="julia hljs"><span class=hljs-keyword >function</span> Base.take!(b::RingBuffer)
+    put!(b.buffers, b.current)
+    b.current = take!(b.results)
+    b.current
+<span class=hljs-keyword >end</span></code></pre>
+<p>I would have implemented a simpler one channel buffer, but <code>RingBuffer</code> proved to be more effective.</p>
+<h4 id=implementation ><a href="#implementation" class=header-anchor >Implementation</a></h4>
+<p>The files are read and the datapoints are put in a <code>Channel</code>.</p>
+<pre><code class="julia hljs">ch_src = <span class=hljs-built_in >Channel</span>{BSuiteRLTransition}(n * tf_reader_sz) <span class=hljs-keyword >do</span> ch
+    <span class=hljs-keyword >for</span> fs <span class=hljs-keyword >in</span> partition(files, n)
+        Threads.foreach(
+            TFRecord.read(
+                fs;
+                compression=:gzip,
+                bufsize=tf_reader_bufsize,
+                channel_size=tf_reader_sz,
+            );
+            schedule=Threads.StaticSchedule()
+        ) <span class=hljs-keyword >do</span> x
+            put!(ch, BSuiteRLTransition(x, game))
+        <span class=hljs-keyword >end</span>
+    <span class=hljs-keyword >end</span>
+<span class=hljs-keyword >end</span></code></pre>
+<p>The datapoints are then put in a <code>RingBuffer</code> which is returned.</p>
+<pre><code class="julia hljs">res = RingBuffer(buffer;taskref=taskref, sz=n_preallocations) <span class=hljs-keyword >do</span> buff
+    Threads.<span class=hljs-meta >@threads</span> <span class=hljs-keyword >for</span> i <span class=hljs-keyword >in</span> <span class=hljs-number >1</span>:batchsize
+        batch!(buff, take!(transitions), i)
+    <span class=hljs-keyword >end</span>
+<span class=hljs-keyword >end</span></code></pre>
+<h4 id=working ><a href="#working" class=header-anchor >Working</a></h4>
+<p>The <code>bsuite_params</code> function can be used to get the possible arguments that can be passed into the function.</p>
+<pre><code class="julia hljs">julia&gt; bsuite_params()
+┌ Info: [<span class=hljs-string >&quot;cartpole&quot;</span>, <span class=hljs-string >&quot;catch&quot;</span>, <span class=hljs-string >&quot;mountain_car&quot;</span>]
+│   shards = <span class=hljs-number >0</span>:<span class=hljs-number >4</span>
+└   type = <span class=hljs-number >3</span>-element <span class=hljs-built_in >Vector</span>{<span class=hljs-built_in >String</span>}: …</code></pre>
+<p>To get the dataset <code>rl_unplugged_bsuite_dataset</code> function can be called.</p>
+<pre><code class="julia hljs">julia&gt; rl_unplugged_bsuite_dataset(<span class=hljs-string >&quot;cartpole&quot;</span>, [<span class=hljs-number >1</span>], <span class=hljs-string >&quot;full&quot;</span>)
+Progress: <span class=hljs-number >100</span>%|███████████████████████████████████████████████████████████████████████████████████████████████████████| Time: <span class=hljs-number >0</span>:<span class=hljs-number >00</span>:<span class=hljs-number >06</span>
+RingBuffer{ReinforcementLearningDatasets.BSuiteRLTransition}(<span class=hljs-built_in >Channel</span>{ReinforcementLearningDatasets.BSuiteRLTransition}(<span class=hljs-number >12</span>), ReinforcementLearningDatasets.BSuiteRLTransition(<span class=hljs-built_in >Float32</span>[<span class=hljs-number >1.0f-45</span> <span class=hljs-number >1.0f-45</span> … <span class=hljs-literal >NaN</span> <span class=hljs-number >0.0</span>; <span class=hljs-number >0.0</span> <span class=hljs-number >0.0</span> … <span class=hljs-literal >NaN</span> <span class=hljs-number >0.0</span>; … ; <span class=hljs-number >3.0f-45</span> <span class=hljs-number >4.0f-45</span> … <span class=hljs-literal >NaN</span> <span class=hljs-number >9.0f-44</span>; <span class=hljs-number >0.0</span> <span class=hljs-number >0.0</span> … <span class=hljs-literal >NaN</span> <span class=hljs-number >0.0</span>], [<span class=hljs-number >140269590665616</span>, <span class=hljs-number >140269590665616</span>, <span class=hljs-number >140269590665616</span>, 
+...
+julia&gt; take!(ds)
+ReinforcementLearningDatasets.BSuiteRLTransition(<span class=hljs-built_in >Float32</span>[-<span class=hljs-number >0.3289344</span> <span class=hljs-number >0.26131696</span> … -<span class=hljs-number >0.015311318</span> <span class=hljs-number >0.49089232</span>; <span class=hljs-number >0.31783995</span> -<span class=hljs-number >1.2033445</span> … <span class=hljs-number >0.04303875</span> -<span class=hljs-number >0.24614102</span>; … ; -<span class=hljs-number >0.27250051</span> <span class=hljs-number >1.0421202</span> … -<span class=hljs-number >0.17690773</span> <span class=hljs-number >0.2694671</span>; <span class=hljs-number >0.697</span> <span class=hljs-number >0.805</span> … <span class=hljs-number >0.009</span> <span class=hljs-number >0.955</span>], [<span class=hljs-number >0</span>, <span class=hljs-number >0</span>, <span class=hljs-number >0</span>, <span class=hljs-number >0</span>, <span class=hljs-number >0</span>, <span class=hljs-number >1</span>, <span class=hljs-number >1</span>, <span class=hljs-number >0</span>, <span class=hljs-number >0</span>, <span class=hljs-number >1</span>  …  <span class=hljs-number >2</span>, <span class=hljs-number >0</span>, <span class=hljs-number >1</span>, <span class=hljs-number >0</span>, <span class=hljs-number >2</span>, <span class=hljs-number >0</span>,
+...</code></pre>
+<h3 id=dm_datasets ><a href="#dm_datasets" class=header-anchor >DM Datasets</a></h3>
+<p>The DM datasets load and work similarly to bsuite datasets. Since, I made one file to manage <code>DM Control</code>, <code>DM Lab</code> and <code>DM Locomotion</code>, there had to be a lot of post processing work to handle all the edge cases presented by each of the dataset.</p>
+<p>The types also had to be created based on the individual datasets so that the code is good at loading efficiently.</p>
+<h4 id=example_of_type_handling_used ><a href="#example_of_type_handling_used" class=header-anchor >Example of type handling used.</a></h4>
+<pre><code class="julia hljs"><span class=hljs-keyword >function</span> make_transition(example::TFRecord.Example, feature_size::<span class=hljs-built_in >Dict</span>{<span class=hljs-built_in >String</span>, <span class=hljs-built_in >Tuple</span>})
+    f = example.features.feature
+    
+    observation_dict = <span class=hljs-built_in >Dict</span>{<span class=hljs-built_in >Symbol</span>, <span class=hljs-built_in >AbstractArray</span>}()
+    next_observation_dict = <span class=hljs-built_in >Dict</span>{<span class=hljs-built_in >Symbol</span>, <span class=hljs-built_in >AbstractArray</span>}()
+    transition_dict = <span class=hljs-built_in >Dict</span>{<span class=hljs-built_in >Symbol</span>, <span class=hljs-built_in >Any</span>}()
+
+    <span class=hljs-keyword >for</span> feature <span class=hljs-keyword >in</span> keys(feature_size)
+        <span class=hljs-keyword >if</span> split(feature, <span class=hljs-string >&quot;/&quot;</span>)[<span class=hljs-number >1</span>] == <span class=hljs-string >&quot;observation&quot;</span>
+            ob_key = <span class=hljs-built_in >Symbol</span>(chop(feature, head = length(<span class=hljs-string >&quot;observation&quot;</span>)+<span class=hljs-number >1</span>, tail=<span class=hljs-number >0</span>))
+            <span class=hljs-keyword >if</span> split(feature, <span class=hljs-string >&quot;/&quot;</span>)[<span class=hljs-keyword >end</span>] == <span class=hljs-string >&quot;egocentric_camera&quot;</span>
+                cam_feature_size = feature_size[feature]
+                ob_size = prod(cam_feature_size)
+                observation_dict[ob_key] = reshape(f[feature].bytes_list.value[<span class=hljs-number >1</span>][<span class=hljs-number >1</span>:ob_size], cam_feature_size...)
+                next_observation_dict[ob_key] = reshape(f[feature].bytes_list.value[<span class=hljs-number >1</span>][ob_size+<span class=hljs-number >1</span>:<span class=hljs-keyword >end</span>], cam_feature_size...)
+            <span class=hljs-keyword >else</span>
+                <span class=hljs-keyword >if</span> feature_size[feature] == ()
+                    observation_dict[ob_key] = f[feature].float_list.value
+                <span class=hljs-keyword >else</span>
+                    ob_size = feature_size[feature][<span class=hljs-number >1</span>]
+                    observation_dict[ob_key] = f[feature].float_list.value[<span class=hljs-number >1</span>:ob_size]
+                    next_observation_dict[ob_key] = f[feature].float_list.value[ob_size+<span class=hljs-number >1</span>:<span class=hljs-keyword >end</span>]
+                <span class=hljs-keyword >end</span>
+            <span class=hljs-keyword >end</span>
+        <span class=hljs-keyword >elseif</span> feature == <span class=hljs-string >&quot;action&quot;</span>
+            ob_size = feature_size[feature][<span class=hljs-number >1</span>]
+            action = f[feature].float_list.value
+            transition_dict[:action] = action[<span class=hljs-number >1</span>:ob_size]
+            transition_dict[:next_action] = action[ob_size+<span class=hljs-number >1</span>:<span class=hljs-keyword >end</span>]
+        <span class=hljs-keyword >elseif</span> feature == <span class=hljs-string >&quot;step_type&quot;</span>
+            transition_dict[:terminal] = f[feature].float_list.value[<span class=hljs-number >1</span>] == <span class=hljs-number >2</span>
+        <span class=hljs-keyword >else</span>
+            ob_key = <span class=hljs-built_in >Symbol</span>(feature)
+            transition_dict[ob_key] = f[feature].float_list.value[<span class=hljs-number >1</span>]
+        <span class=hljs-keyword >end</span>
+    <span class=hljs-keyword >end</span>
+    state_nt = (state = <span class=hljs-built_in >NamedTuple</span>(observation_dict),)
+    next_state_nt = (next_state = <span class=hljs-built_in >NamedTuple</span>(next_observation_dict),)
+    transition = <span class=hljs-built_in >NamedTuple</span>(transition_dict)
+
+    merge(transition, state_nt, next_state_nt)
+<span class=hljs-keyword >end</span></code></pre>
+<p>The batch is made based on the internal types that are available based on the specific dataset.</p>
+<h4 id=usage ><a href="#usage" class=header-anchor >Usage</a></h4>
+<pre><code class="julia hljs">julia&gt; rl_unplugged_dm_dataset(<span class=hljs-string >&quot;fish_swim&quot;</span>, [<span class=hljs-number >1</span>]; type=<span class=hljs-string >&quot;dm_control_suite&quot;</span>)
+Progress: <span class=hljs-number >100</span>%|█████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| Time: <span class=hljs-number >0</span>:<span class=hljs-number >00</span>:<span class=hljs-number >02</span>
+RingBuffer{<span class=hljs-built_in >NamedTuple</span>{(:reward, :episodic_reward, :discount, :state, :next_state, :action, :next_action, :terminal), <span class=hljs-built_in >Tuple</span>{<span class=hljs-built_in >Vector</span>{<span class=hljs-built_in >Float32</span>}, <span class=hljs-built_in >Vector</span>{<span class=hljs-built_in >Float32</span>}, <span class=hljs-built_in >Vector</span>{<span class=hljs-built_in >Float32</span>}, <span class=hljs-built_in >NamedTuple</span>{(:joint_angles, :upright, :target, :velocity), <span class=hljs-built_in >NTuple</span>{<span class=hljs-number >4</span>, <span class=hljs-built_in >Matrix</span>{<span class=hljs-built_in >Float32</span>}}}, <span class=hljs-built_in >NamedTuple</span>{(:joint_angles, :upright, :target, :velocity), <span class=hljs-built_in >NTuple</span>{<span class=hljs-number >4</span>, <span class=hljs-built_in >Matrix</span>{<span class=hljs-built_in >Float32</span>}}}, <span class=hljs-built_in >Matrix</span>{<span class=hljs-built_in >Float32</span>}, <span class=hljs-built_in >Matrix</span>{<span class=hljs-built_in >Float32</span>}, <span class=hljs-built_in >Vector</span>{<span class=hljs-built_in >Bool</span>}}}}(<span class=hljs-built_in >Channel</span>{<span class=hljs-built_in >NamedTuple</span>{(:reward, :episodic_reward, :discount, :state, :next_state, :action, :next_action, :terminal), <span class=hljs-built_in >Tuple</span>{<span class=hljs-built_in >Vector</span>{<span class=hljs-built_in >Float32</span>}, <span class=hljs-built_in >Vector</span>{<span class=hljs-built_in >Float32</span>}, <span class=hljs-built_in >Vector</span>{<span class=hljs-built_in >Float32</span>}, <span class=hljs-built_in >NamedTuple</span>{(:joint_angles, :upright, :target, :velocity), <span class=hljs-built_in >NTuple</span>{<span class=hljs-number >4</span>, <span class=hljs-built_in >Matrix</span>{<span class=hljs-built_in >Float32</span>}}}, <span class=hljs-built_in >NamedTuple</span>{(:joint_angles, :upright, :target, :velocity), <span class=hljs-built_in >NTuple</span>{<span class=hljs-number >4</span>, <span class=hljs-built_in >Matrix</span>{<span class=hljs-built_in >Float32</span>}}}, <span class=hljs-built_in >Matrix</span>{<span class=hljs-built_in >Float32</span>}, <span class=hljs-built_in >Matrix</span>{<span class=hljs-built_in >Float32</span>}, <span class=hljs-built_in >Vector</span>{<span class=hljs-built_in >Bool</span>}}}}(<span class=hljs-number >12</span>), (reward = <span class=hljs-built_in >Float32</span>[<span class=hljs-number >0.0</span>, <span class=hljs-number >0.0</span>, <span class=hljs-number >0.0</span>, <span class=hljs-number >0.0</span>, <span class=hljs-number >0.0</span>, <span class=hljs-number >0.0</span>, <span class=hljs-number >0.0</span>, <span class=hljs-number >0.0</span>, -<span class=hljs-number >3.4009038f-36</span>, <span class=hljs-number >4.5764f-41</span>  …  <span class=hljs-number >0.0</span>, <span class=hljs-number >0.0</span>, <span class=hljs-number >2.3634088f-28</span>, <span class=hljs-number >4.5765f-41</span>, <span class=hljs-number >1.1692183f-34</span>, <span class=hljs-number >4.5764f-41</span>, <span class=hljs-number >0.0</span>, <span class=hljs-number >0.0</span>,
+...</code></pre>
+<h3 id=deep_ope ><a href="#deep_ope" class=header-anchor >Deep OPE</a></h3>
+<p>Support is given for D4RL policies provided in <a href="https://github.com/google-research/deep_ope">Deep OPE</a><d-cite key="DBLP:journals/corr/abs-2103-16596"></d-cite>.</p>
+<h4 id=implementation__2 ><a href="#implementation__2" class=header-anchor >Implementation</a></h4>
+<p>The policies that are given <a href="https://github.com/JuliaReinforcementLearning/ReinforcementLearning.jl/blob/main/src/ReinforcementLearningDatasets/src/deep_ope/d4rl/d4rl_policies.jl">here</a> are loaded using <code>d4rl_policy</code> function.</p>
+<p>The policies are loaded into a <code>D4RLGaussianNetwork</code> which will be integrated into <code>GaussianNetwork</code> in RLCore soon.</p>
+<pre><code class="julia hljs">Base.<span class=hljs-meta >@kwdef</span> <span class=hljs-keyword >struct</span> D4RLGaussianNetwork{P,U,S}
+    pre::P = identity
+    μ::U
+    logσ::S
+<span class=hljs-keyword >end</span></code></pre>
+<p>The network returns the <code>a</code>, <code>μ</code> based on the parameters that are passed into it.</p>
+<pre><code class="julia hljs"><span class=hljs-keyword >function</span> (model::D4RLGaussianNetwork)(
+    state::<span class=hljs-built_in >AbstractArray</span>;
+    rng::AbstractRNG=MersenneTwister(<span class=hljs-number >123</span>), 
+    noisy::<span class=hljs-built_in >Bool</span>=<span class=hljs-literal >true</span>
+)
+    x = model.pre(state)
+    μ, logσ = model.μ(x), model.logσ(x)
+    <span class=hljs-keyword >if</span> noisy
+        a = μ + exp.(logσ) .* <span class=hljs-built_in >Float32</span>.(randn(rng, size(μ)))
+    <span class=hljs-keyword >else</span>
+        a = μ + exp.(logσ)
+    <span class=hljs-keyword >end</span>
+    a, μ
+<span class=hljs-keyword >end</span></code></pre>
+<p>The weights are loaded using the following <a href="https://github.com/JuliaReinforcementLearning/ReinforcementLearning.jl/blob/main/src/ReinforcementLearningDatasets/src/deep_ope/d4rl/d4rl_policy.jl">code</a>.</p>
+<p>To know the real life performance of the networks an auxiliary function <code>deep_ope_d4rl_evaluate</code> is also given which gives the unicode plot showing the performance of the policy. The code is given <a href="https://github.com/JuliaReinforcementLearning/ReinforcementLearning.jl/blob/main/src/ReinforcementLearningDatasets/src/deep_ope/d4rl/evaluate.jl">here</a>.</p>
+<h4 id=working__2 ><a href="#working__2" class=header-anchor >Working</a></h4>
+<p>The params needed for loading the policies can be obtained using <code>d4rl_policy_params</code></p>
+<pre><code class="julia hljs">julia&gt; d4rl_policy_params()
+┌ Info: <span class=hljs-built_in >Set</span>([<span class=hljs-string >&quot;relocate&quot;</span>, <span class=hljs-string >&quot;maze2d_large&quot;</span>, <span class=hljs-string >&quot;antmaze_umaze&quot;</span>, <span class=hljs-string >&quot;hopper&quot;</span>, <span class=hljs-string >&quot;pen&quot;</span>, <span class=hljs-string >&quot;antmaze_medium&quot;</span>, <span class=hljs-string >&quot;walker&quot;</span>, <span class=hljs-string >&quot;hammer&quot;</span>, <span class=hljs-string >&quot;antmaze_large&quot;</span>, <span class=hljs-string >&quot;maze2d_umaze&quot;</span>, <span class=hljs-string >&quot;maze2d_medium&quot;</span>, <span class=hljs-string >&quot;ant&quot;</span>, <span class=hljs-string >&quot;door&quot;</span>, <span class=hljs-string >&quot;halfcheetah&quot;</span>])
+│   agent = <span class=hljs-number >2</span>-element <span class=hljs-built_in >Vector</span>{<span class=hljs-built_in >String</span>}: …
+└   epoch = <span class=hljs-number >0</span>:<span class=hljs-number >10</span></code></pre>
+<p>Sometimes the expected policy may not be available. So, it is always better to check which ones are available using <code>ReinforcementLearningDatasets.D4RL_POLICIES</code>.</p>
+<pre><code class="julia hljs">julia&gt; policy = d4rl_policy(<span class=hljs-string >&quot;hopper&quot;</span>, <span class=hljs-string >&quot;online&quot;</span>, <span class=hljs-number >3</span>)
+D4RLGaussianNetwork{Flux.Chain{<span class=hljs-built_in >Tuple</span>{Flux.Dense{typeof(NNlib.relu), <span class=hljs-built_in >Matrix</span>{<span class=hljs-built_in >Float32</span>}, <span class=hljs-built_in >Vector</span>{<span class=hljs-built_in >Float32</span>}}, Flux.Dense{typeof(NNlib.relu), <span class=hljs-built_in >Matrix</span>{<span class=hljs-built_in >Float32</span>}, <span class=hljs-built_in >Vector</span>{<span class=hljs-built_in >Float32</span>}}}}, Flux.Chain{<span class=hljs-built_in >Tuple</span>{Flux.Dense{typeof(identity), <span class=hljs-built_in >Matrix</span>{<span class=hljs-built_in >Float32</span>}, <span class=hljs-built_in >Vector</span>{<span class=hljs-built_in >Float32</span>}}}}, Flux.Chain{<span class=hljs-built_in >Tuple</span>{Flux.Dense{typeof(identity), <span class=hljs-built_in >Matrix</span>{<span class=hljs-built_in >Float32</span>}, <span class=hljs-built_in >Vector</span>{<span class=hljs-built_in >Float32</span>}}}}}(Chain(Dense(<span class=hljs-number >11</span>, <span class=hljs-number >256</span>, relu), Dense(<span class=hljs-number >256</span>, <span class=hljs-number >256</span>, relu)), Chain(Dense(<span class=hljs-number >256</span>, <span class=hljs-number >3</span>)), Chain(Dense(<span class=hljs-number >256</span>, <span class=hljs-number >3</span>)))</code></pre>
+<p>The policy will return the <code>a</code> and <code>μ</code> for a state that is given.</p>
+<p><code>deep_ope_d4rl_evaluate</code> is a helper function that helps visualize the performance of the agent. The more the epoch number, the better the performance.</p>
+<pre><code class="julia hljs">julia&gt; deep_ope_d4rl_evaluate(<span class=hljs-string >&quot;halfcheetah&quot;</span>, <span class=hljs-string >&quot;online&quot;</span>, <span class=hljs-number >3</span>)
+Progress: <span class=hljs-number >100</span>%|█████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| Time: <span class=hljs-number >0</span>:<span class=hljs-number >00</span>:<span class=hljs-number >01</span>
+                    halfcheetah-medium-v0 scores
+              +----------------------------------------+       
+         <span class=hljs-number >8100</span> |                                       .| scores
+              |                                      .&#x27;|       
+              |        .                           .&#x27;  |       
+              |      .&#x27; :                         .&#x27;   |       
+              |    .&#x27;   :       :.               :     |       
+              |  .&#x27;      :     .&#x27; :            .&#x27;      |       
+              |.&#x27;        &#x27;.    :   :          .&#x27;       |       
+   score      |           :   :     &#x27;.       .&#x27;        |       
+              |           &#x27;. .&#x27;      &#x27;.      :         |       
+              |            : :        :     :          |       
+              |            &#x27;:          :   :           |       
+              |                         : .&#x27;           |       
+              |                         &#x27;.:            |       
+              |                          &#x27;             |       
+         <span class=hljs-number >7400</span> |                                        |       
+              +----------------------------------------+       
+              <span class=hljs-number >1</span>                                       <span class=hljs-number >10</span>
+                               episode
+julia&gt; deep_ope_d4rl_evaluate(<span class=hljs-string >&quot;halfcheetah&quot;</span>, <span class=hljs-string >&quot;online&quot;</span>, <span class=hljs-number >10</span>)
+Progress: <span class=hljs-number >100</span>%|█████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| Time: <span class=hljs-number >0</span>:<span class=hljs-number >00</span>:<span class=hljs-number >01</span>
+                     halfcheetah-medium-v0 scores
+               +----------------------------------------+       
+         <span class=hljs-number >12000</span> |                 .                      | scores
+               |<span class=hljs-string >&#x27;&#x27;&#x27;</span>&#x27;..........<span class=hljs-string >&#x27;&#x27;&#x27;</span>&#x27;.       :.       :<span class=hljs-string >&#x27;&#x27;&#x27;</span>&#x27;|       
+               |                  :       :&#x27;.     :     |       
+               |                  :      .<span class=hljs-string >&#x27; &#x27;</span>.   :      |       
+               |                  &#x27;.     :   :  :       |       
+               |                   :     :    ::        |       
+               |                   :    .&#x27;     &#x27;        |       
+   score       |                   &#x27;.   :               |       
+               |                    :   :               |       
+               |                    :  .&#x27;               |       
+               |                    &#x27;. :                |       
+               |                     : :                |       
+               |                     :.&#x27;                |       
+               |                     ::                 |       
+          <span class=hljs-number >2000</span> |                      :                 |       
+               +----------------------------------------+       
+               <span class=hljs-number >1</span>                                       <span class=hljs-number >10</span>
+                                episode</code></pre>
+<h3 id=fqe ><a href="#fqe" class=header-anchor >FQE</a></h3>
+<p>A major amount of time was spent on researching about OPE methods of which <code>FQE</code> was the most appropriate given that the use case is Deep Reinforcement Learning.</p>
+<p><a href="https://arxiv.org/pdf/1903.08738.pdf">Batch Policy Learning under Constraints</a><d-cite key="DBLP:journals/corr/abs-1903-08738"></d-cite> introduces the FQE and uses it for offline reinforcement learning under constraints and achieves remarkable results by calculating new constraint cost functions with the datasets. The algorithm that is implemented in RLZoo is similar to the one that is proposed here.</p>
+<figure class="l-body text-center">
+    <img src="/blog/ospp_final_term_report_210370741/FQE_Original.png">
+    <figcaption></figcaption>
+</figure>
+
+<p>The implementation in RLZoo is based on <a href="https://arxiv.org/pdf/2007.09055.pdf">Hyperparameter Selection for Offline Reinforcement Learning</a><d-cite key="DBLP:journals/corr/abs-2007-09055"></d-cite>. This is very similar to the algorithm that we discussed earlier. The paper uses OPE as a method for offline hyper paramater selection.</p>
+<figure class="l-body text-center">
+    <img src="/blog/ospp_final_term_report_210370741/OPE_and_Online_Hyperparameter_Selection.png">
+    <figcaption></figcaption>
+</figure>
+
+<p>The average of values calculated by FQE based on initial states can be taken as the reward that the policy would gain from the environment. So, the same can be used for online hyper parameter selection.</p>
+<p>The pseudocode for the implementation and the objective function are as follows.</p>
+<figure class="l-body text-center">
+    <img src="/blog/ospp_final_term_report_210370741/FQE_Impl.png">
+    <figcaption></figcaption>
+</figure>
+
+<figure class="l-body text-center">
+    <img src="/blog/ospp_final_term_report_210370741/FQE_Objective.png">
+    <figcaption></figcaption>
+</figure>
+
+<h4 id=implementation__3 ><a href="#implementation__3" class=header-anchor >Implementation</a></h4>
+<p>Function parameters for the implementation.</p>
+<pre><code class="julia hljs"><span class=hljs-keyword >mutable struct</span> FQE{
+    P&lt;:GaussianNetwork,
+    C&lt;:NeuralNetworkApproximator,
+    C_T&lt;:NeuralNetworkApproximator,
+    R&lt;:AbstractRNG,
+ } &lt;: AbstractLearner
+    policy::P
+    q_network::C
+    target_q_network::C_T
+    n_evals::<span class=hljs-built_in >Int</span>
+    γ::<span class=hljs-built_in >Float32</span>
+    batchsize::<span class=hljs-built_in >Int</span>
+    update_freq::<span class=hljs-built_in >Int</span>
+    update_step::<span class=hljs-built_in >Int</span>
+    tar_update_freq::<span class=hljs-built_in >Int</span>
+    rng::R
+    <span class=hljs-comment >#logging</span>
+    loss::<span class=hljs-built_in >Float32</span>
+<span class=hljs-keyword >end</span></code></pre>
+<p>The update function for the learner is a simple critic update based on the following procedure.</p>
+<pre><code class="julia hljs"><span class=hljs-keyword >function</span> RLBase.update!(l::FQE, batch::<span class=hljs-built_in >NamedTuple</span>{SARTS})
+    policy = l.policy
+    Q, Qₜ = l.q_network, l.target_q_network
+
+    D = device(Q)
+    s, a, r, t, s′ = (send_to_device(D, batch[x]) <span class=hljs-keyword >for</span> x <span class=hljs-keyword >in</span> SARTS)
+    γ = l.γ
+    batchsize = l.batchsize
+
+    loss_func = Flux.Losses.mse
+
+    q′ = Qₜ(vcat(s′, policy(s′)[<span class=hljs-number >1</span>])) |&gt; vec
+
+    target = r .+ γ .* (<span class=hljs-number >1</span> .- t) .* q′
+
+    gs = gradient(params(Q)) <span class=hljs-keyword >do</span>
+        q = Q(vcat(s, reshape(a, :, batchsize))) |&gt; vec
+        loss = loss_func(q, target)
+        Zygote.ignore() <span class=hljs-keyword >do</span>
+            l.loss = loss
+        <span class=hljs-keyword >end</span>
+        loss
+    <span class=hljs-keyword >end</span>
+    Flux.Optimise.update!(Q.optimizer, params(Q), gs)
+
+    <span class=hljs-keyword >if</span> l.update_step % l.tar_update_freq == <span class=hljs-number >0</span>
+        Qₜ = deepcopy(Q)
+    <span class=hljs-keyword >end</span>
+<span class=hljs-keyword >end</span></code></pre>
+<h4 id=results ><a href="#results" class=header-anchor >Results</a></h4>
+<p>The <a href="https://github.com/JuliaReinforcementLearning/ReinforcementLearning.jl/pull/515">implementation</a> is still a work in progress because of some sampling error. But the algorithm that I implemented without RL.jl framework works as expected. </p>
+<h5 id=parameter_values ><a href="#parameter_values" class=header-anchor >Parameter Values</a></h5>
+<ul>
+<li><p>Policy &#61;&gt; CRR Policy</p>
+
+<li><p>Env &#61;&gt; PendulumEnv</p>
+
+<li><p>q_networks &#61;&gt; Two 64 neuron layers with <code>n_s&#43;n_a</code> input neurons and <code>1</code> output neuron.</p>
+
+<li><p>optimizer &#61;&gt; Adam&#40;0.005&#41;</p>
+
+<li><p>loss &#61;&gt; Flux.Losses.mse</p>
+
+<li><p>γ &#61;&gt; 0.99</p>
+
+<li><p>batch&#95;size &#61;&gt; 256</p>
+
+<li><p>update&#95;freq, update&#95;step &#61;&gt; 1</p>
+
+<li><p>tar&#95;update&#95;freq &#61;&gt; 256</p>
+
+<li><p>number of training steps &#61;&gt; 40_000</p>
+
+</ul>
+<h5 id=evaluation_results ><a href="#evaluation_results" class=header-anchor >Evaluation Results</a></h5>
+<p>The values evaluated by FQE for 100 initial states.</p>
+<figure class="l-body text-center">
+    <img src="/blog/ospp_final_term_report_210370741/FQE_Evaluation_Result.png">
+    <figcaption></figcaption>
+</figure>
+
+<p>mean&#61;-243.0258f0</p>
+<h5 id=actual_values ><a href="#actual_values" class=header-anchor >Actual Values</a></h5>
+<p>The values obtained by running the agent in the environment for 100 iterations.</p>
+<figure class="l-body text-center">
+    <img src="/blog/ospp_final_term_report_210370741/Actual_Evaluation_Result.png">
+    <figcaption></figcaption>
+</figure>
+
+<p>mean&#61;-265.7068139137983</p>
+<h2 id=relevant_commits_and_prs ><a href="#relevant_commits_and_prs" class=header-anchor >Relevant Commits and PRs</a></h2>
+<ul>
+<li><p><a href="https://github.com/JuliaReinforcementLearning/ReinforcementLearning.jl/commit/b29c9f01240d6aae9e6f7acc28a0a1e95cf29f76#diff-d7a7b3de8d5eedecb629c4d80b6b249d68d15d6f66a7ef768bf4eb937fd5a5d7">Fix RLDatasets.jl documentation &#40;#467&#41;</a></p>
+
+<li><p><a href="https://github.com/JuliaReinforcementLearning/ReinforcementLearning.jl/commit/4326df59296a6edc488b77f29c4968853280db85#diff-d7a7b3de8d5eedecb629c4d80b6b249d68d15d6f66a7ef768bf4eb937fd5a5d7">Add bsuite datasets &#40;#482&#41;</a></p>
+
+<li><p><a href="https://github.com/JuliaReinforcementLearning/ReinforcementLearning.jl/commit/9185c8548197dd4a6ef0cd7c84c3531c491e6447#diff-d7a7b3de8d5eedecb629c4d80b6b249d68d15d6f66a7ef768bf4eb937fd5a5d7">Add dm datasets &#40;#495&#41;</a></p>
+
+<li><p><a href="https://github.com/JuliaReinforcementLearning/ReinforcementLearning.jl/commit/1a00766e9df3edc19cd7377a595b4563261a0356#diff-d7a7b3de8d5eedecb629c4d80b6b249d68d15d6f66a7ef768bf4eb937fd5a5d7">Add support for deep ope in RLDatasets.jl &#40;#500&#41;</a></p>
+
+<li><p><a href="https://github.com/JuliaReinforcementLearning/ReinforcementLearning.jl/pull/515">WIP to implement FQE #515</a></p>
+
+</ul>
+<h2 id=conclusion ><a href="#conclusion" class=header-anchor >Conclusion</a></h2>
+<p>The foundations of RLDatasets.jl package has been laid during the course of the project. The basic datasets except for Real World Datasets from RL Unplugged have been supported. Furthermore, D4RL policies have been successfully loaded and tested. The algorithm for FQE has been tried out with a minor implementation detail pending. </p>
+<p>With the completion of FQE the four requirements of OPE as laid out by <a href="https://github.com/google-research/deep_ope">Deep OPE</a><d-cite key="DBLP:journals/corr/abs-2103-16596"></d-cite> will be completed for D4RL.</p>
+<figure class="l-body text-center">
+    <img src="/blog/ospp_final_term_report_210370741/OPE_Requirements.png">
+    <figcaption></figcaption>
+</figure>
+
+<h3 id=implications ><a href="#implications" class=header-anchor >Implications</a></h3>
+<p>Equipping RL.jl with RLDatasets.jl is a key step in making the package more industry relevant because different offline algorithms can be compared with respect to a variety of standard offline dataset benchmarks. It is also meant to improve the implementations of existing offline algorithms and make it on par with the SOTA implementations. This package provides a seamless way of downloading and accessing existing datasets and also supports loading datasets into memory with ease, which if implemented separately, would be tedious for the user. It also incorporates policies that can be useful for testing Off Policy Evaluation Methods.</p>
+<h3 id=future_scope ><a href="#future_scope" class=header-anchor >Future Scope</a></h3>
+<p>There are several exciting work that are possible from this point.</p>
+<ul>
+<li><p>Testing and improvement of already existing Offline Algorithms in RLZoo.jl.</p>
+
+<li><p>Integrating the existing RLDatasets.jl package to work well with RL.jl.</p>
+
+<li><p>Implementing more OPE algorithms proposed in <a href="https://arxiv.org/pdf/1911.06854.pdf">Empirical Study of Off-Policy Policy Evaluation for Reinforcement Learning paper</a><d-cite key="DBLP:journals/corr/abs-1911-06854"></d-cite> for use in Deep RL and Tabular RL.</p>
+
+<li><p>Implementation of other FQE methods like DiscreteFQE, <a href="https://arxiv.org/pdf/2007.13609.pdf">FQE-L2 &#40;Statistical Bootstrapping for Uncertainty Estimation in Off-Policy Evaluation&#41;</a><d-cite key="DBLP:journals/corr/abs-2007-13609"></d-cite>.</p>
+
+<li><p>Adding standard difficult benchmarks for existing Offline RL methods.</p>
+
+<li><p>Adding environments to work out of the box for evaluation of OPE methods.</p>
+
+<li><p>Adding Scikit learn like <a href="https://github.com/JuliaReinforcementLearning/ReinforcementLearning.jl/discussions/359">features</a> on top of RLDataset.jl. </p>
+
+</ul>
+
+<div></div></d-article>
+          
+
+    
+    
+        
+
+
+    
+
+    <d-appendix>
+    <h3>Corrections</h3>
+<p>If you see mistakes or want to suggest changes, please <a href="https://github.com/JuliaReinforcementLearning/ReinforcementLearning.jl/issues">create an issue</a> in the source repository.</p>
+
+    <d-bibliography src="/blog/ospp_final_term_report_210370741/bibliography.bib"></d-bibliography>
+</d-appendix>
+
+    <div class="distill-site-nav distill-site-footer">
+      <div class=row >
+        <div class=col-md-3 ></div>
+        <div class=col-md-6 >
+          <p>This website is built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> of the
+          <a href="https://github.com/tlienart/DistillTemplate">DistillTemplate</a>
+          (licensed under <a href="https://github.com/distillpub/template/blob/master/LICENSE">Apache
+          License 2.0</a>) and <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a>.
+          The <a href="https://github.com/JuliaReinforcementLearning/ReinforcementLearning.jl">source
+          code</a> of this website is licensed under <a href="https://github.com/JuliaReinforcementLearning/JuliaReinforcementLearning.github.io/blob/master/LICENSE">MIT
+          License</a>. The <a href="https://github.com/JuliaReinforcementLearning">JuliaReinforcementLearning</a>
+          organization was first created by <a href="https://github.com/jbrea">Johanni Brea</a> and then
+          co-maintained by <a href="https://github.com/findmyway">Jun Tian</a>.
+          And we thank <a href="https://github.com/JuliaReinforcementLearning/ReinforcementLearning.jl#contributors-">all the contributors </a> .</p>
+        </div>
+        <div class=col-md-3 ></div>
+      </div>
+    </div>
